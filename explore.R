@@ -14,12 +14,23 @@ library(statar)
 library(stringr)
 library(tidyr)
 library(here)
+library(httr)
+library(jsonlite)
+library(magrittr)
 
 options(digits=4)
 
 ###################################
 ######### Reading in Data #########
 ###################################
+
+census_tracts <- 
+  read_csv(here("data", 
+                "tract_community.csv"))
+
+community_numbers <-
+  read_excel(here("data", 
+                  "community_numbers.xlsx"))
 
 chicago_rodents <- read_csv(here("data", 
                                  "Chicago_311_Rodent_2014-2018.csv"))
@@ -39,9 +50,40 @@ la_rodents_2018 <- read_csv(here("data",
 detroit_rodents_2018 <- read_csv(here("data",
                                       "Detroit_Rodent_2018.csv"))
 
-###################################################
-######### Processing Rodent Data for 2018 #########
-###################################################
+##########################################
+######### Scraping Data from ACS #########
+##########################################
+
+base <- "https://api.census.gov/data/2016/acs/acs5?"
+acs_vars <- "get=B00001_001E,B07013_001E,B07013_003E,B19301_001E"
+state_tracts <- "&for=tract:*&in=state:17"
+AUTH_TOKEN = read_delim(here("data", "Auth.txt"), 
+                        delim = "/", 
+                    col_names = F)$X1
+key <- paste("&key=", AUTH_TOKEN, sep = "")
+
+url <- paste(base, acs_vars, state_tracts, key, sep = "")
+response <- GET(url)
+all_il_tracts <- 
+  jsonlite::fromJSON(content(response, as="text")) %>%
+  data.frame() %>%
+  slice(-1)
+
+colnames(all_il_tracts) <- c("Population",
+                             "Total_Living_In_Area", 
+                             "Renter_Count", 
+                             "Income_Per_Capita",
+                             "State",
+                             "County",
+                             "Tract")
+
+###################################
+######### Preparing Data  #########
+###################################
+
+census_tracts <-
+  census_tracts %>%
+  left_join(community_numbers, by = c("Community Area" = "Number"))
 
 chicago_rodents_2018 <-
   chicago_rodents %>%
@@ -56,9 +98,56 @@ dc_rodents_2018 <-
   dc_311_2018 %>%
   filter(str_detect(SERVICECODEDESCRIPTION, "Rodent"))
 
-##################################################################
-######### 2018 Citywise Rodent Complaint Comparison Plot #########
-##################################################################
+chicago_rat_community_17 <-
+  chicago_rodents %>%
+  filter(year(mdy(`Creation Date`)) == 2017) %>%
+  group_by(`Community Area`) %>%
+  summarise(`Number of Complaints` = n()) %>%
+  inner_join(community_numbers, by = c("Community Area" = "Number")) %>%
+  select(Community, `Number of Complaints`)
+
+to_numeric <- function(column) {
+  return(as.numeric(levels(column))[column])
+}
+
+Chicago_communities <- 
+  all_il_tracts %>%
+  mutate(Census_Tract = str_c(State, County, Tract),
+         Total_Income = to_numeric(Income_Per_Capita) * 
+                        to_numeric(Population)) %>%
+  select(Census_Tract, 
+         Population,
+         Total_Income,
+         Total_Living_In_Area, 
+         Renter_Count) %>%
+  mutate(Census_Tract = as.numeric(Census_Tract)) %>%
+  inner_join(census_tracts, 
+             by = c("Census_Tract" = "Census Tract")) %>%
+  mutate_at(vars(-"Community",
+                 -"Total_Income"), 
+            .funs = "to_numeric") %>%
+  select(-Census_Tract, -`Community Area`)
+
+Chicago_communities <- 
+  Chicago_communities %>%
+  group_by(Community) %>%
+  summarise_all(.funs = sum) %>%
+  mutate(`Income Per Capita` = round(Total_Income / Population, 0),
+         `Renter Proportion` = Renter_Count / Total_Living_In_Area) %>%
+  select(Community, Population, `Renter Proportion`, `Income Per Capita`)
+
+chicago_rat_community_17 <-
+  Chicago_communities %>%
+  inner_join(chicago_rat_community_17, by = "Community")
+
+chicago_rat_community_17 %<>%
+  mutate(`Number of Requests per 10000 People` = 
+           round(`Number of Complaints` / Population * 10000, 0)
+         )
+  
+#####################################################################
+######### Plot 1: 2018 Citywise Rodent Complaint Comparison #########
+#####################################################################
 
 city_mon_summary <- function(df, date_col, city_name) {
   monthly_summary <-
@@ -113,19 +202,23 @@ p1 <-
   geom_line() + 
   geom_line(data = chicago_months,
             size = 1.1) +
-  labs(title = "Rat Complaints by highly affected US Cities in 2018",
-    subtitle = "Chicago generally has the most rat complaints all year round.",
-     caption = "Source: City Open Data Portals") +
+  labs(title = "Rat Complaints by Highly Affected US Cities in 2018",
+    subtitle = "Chicago generally has the most rat complaints all year round",
+     caption = "\nSource: City Open Data Portals") +
   scale_colour_wsj("colors6", "") +
   theme_wsj() +
-  theme(plot.title = element_text(size = 15),
-     plot.subtitle = element_text(size = 13),
+  theme(plot.title = element_text(size = 15,
+                                 hjust = 0.5),
+     plot.subtitle = element_text(size = 13,
+                                 hjust = 0.5),
       plot.caption = element_text(size = 12),
        plot.margin = margin(t = 30, 
                             r = 30, 
                             b = 30, 
                             l = 30, 
-                         unit = "pt"))
+                         unit = "pt"),
+        axis.title = element_text(size = 13,
+                                  face = "bold"))
 
 ggsave(here("output", "city_compare.pdf"), 
        plot = p1, 
@@ -133,4 +226,70 @@ ggsave(here("output", "city_compare.pdf"),
      height = 6,
       units = "in")
 
+##########################################################################
+######### Plot 2: 2017 Chicago Rodent Requests Community Analysis#########
+##########################################################################
 
+more_renter_low_income <-
+  chicago_rat_community_17 %>%
+  filter(`Income Per Capita` <= 21708) %>%
+  mutate(`Income Level` = "< 180% FPL\n(Federal Poverty Level)")
+  
+p2 <- 
+  chicago_rat_community_17 %>%
+  ggplot(aes(x = `Renter Proportion`,
+             y = `Number of Requests per 10000 People`)) +
+  geom_point(aes(size = `Income Per Capita`), 
+                alpha = 0.8, 
+                color = "gray") +
+  geom_point(data = more_renter_low_income,
+         aes(size = `Income Per Capita`, 
+            color = `Income Level`)) +
+  geom_smooth(data = more_renter_low_income, 
+             color = "dodgerblue4",
+                se = F,
+          linetype = "dashed",
+              size = 1.1) +
+  labs(
+    title = "Lower-income Communities with More Renters Are Less \nLikely to Complain about Rats (2017)",
+ subtitle = "Lower-income renters may care more about \nother socioeconomic issues than rat problems",
+  caption = "\nSource: Chicago Data Portal \n& American Community Survey",
+        x = "Proportion of People Renting in Community",
+        y = "Number of Rodent Complaints"
+    ) +
+  scale_colour_wsj("colors6", "") +
+  scale_size(breaks = c(20000, 40000, 60000, 80000),
+             labels = c("20000 US dollars",
+                        "40000 US dollars",
+                        "60000 US dollars",
+                        "80000 US dollars")) +
+  theme_wsj() +
+  theme(plot.title = element_text(size = 15,
+                                 hjust = 0.7),
+     plot.subtitle = element_text(size = 13,
+                                 hjust = 0.7),
+      plot.caption = element_text(size = 12,
+                                 hjust = 1.45),
+       plot.margin = margin(t = 30, 
+                            r = 30, 
+                            b = 30, 
+                            l = 30, 
+                         unit = "pt"),
+       legend.text = element_text(size = 9.5),
+      legend.title = element_text(size = 11, 
+                                  face = "bold"),
+  legend.direction = "vertical",
+   legend.position = "right",
+        axis.title = element_text(size = 13, 
+                                  face = "bold")) +
+  guides(color = guide_legend("Income Level"))
+
+ggsave(here("output", "community_analysis.pdf"), 
+       plot = p2, 
+       width = 9, 
+       height = 6,
+       units = "in")
+
+###########################################################
+######### Plot 3: Seasonality Sanitation Analysis #########
+###########################################################
