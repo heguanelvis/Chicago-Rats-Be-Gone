@@ -18,7 +18,7 @@ library(httr)
 library(jsonlite)
 library(magrittr)
 
-options(digits=4)
+options(digits = 4)
 
 ###################################
 ######### Reading in Data #########
@@ -32,23 +32,29 @@ community_numbers <-
   read_excel(here("data", 
                   "community_numbers.xlsx"))
 
-chicago_rodents <- read_csv(here("data", 
-                                 "Chicago_311_Rodent_2014-2018.csv"))
+chicago_rodents <- 
+  read_csv(here("data", 
+                "Chicago_311_Rodent_2014-2018.csv"))
 
-boston_311 <- read_csv(here("data", 
-                            "Boston_311.csv"))
+boston_311 <- 
+  read_csv(here("data",
+                "Boston_311.csv"))
 
-dc_311_2018 <- read_csv(here("data",
-                        "DC_Service_Requests_2018.csv"))
+dc_311_2018 <- 
+  read_csv(here("data",
+                "DC_Service_Requests_2018.csv"))
 
-nyc_rodents_2018 <- read_csv(here("data",
-                             "NYC_311_Rodent_2018.csv"))
+nyc_rodents_2018 <- 
+  read_csv(here("data",
+                "NYC_311_Rodent_2018.csv"))
 
-la_rodents_2018 <- read_csv(here("data",
-                                 "LA_Dead_Animal_Removal_2018.csv"))
+la_rodents_2018 <- 
+  read_csv(here("data",
+                "LA_Dead_Animal_Removal_2018.csv"))
 
-detroit_rodents_2018 <- read_csv(here("data",
-                                      "Detroit_Rodent_2018.csv"))
+detroit_rodents_2018 <- 
+  read_csv(here("data",
+                "Detroit_Rodent_2018.csv"))
 
 ##########################################
 ######### Scraping Data from ACS #########
@@ -57,25 +63,27 @@ detroit_rodents_2018 <- read_csv(here("data",
 base <- "https://api.census.gov/data/2016/acs/acs5?"
 acs_vars <- "get=B00001_001E,B07013_001E,B07013_003E,B19301_001E"
 state_tracts <- "&for=tract:*&in=state:17"
-AUTH_TOKEN = read_delim(here("data", "Auth.txt"), 
-                        delim = "/", 
-                    col_names = F)$X1
+AUTH_TOKEN <- 
+  read_delim(here("data", "Auth.txt"), 
+             delim = "/", 
+         col_names = F)$X1
 key <- paste("&key=", AUTH_TOKEN, sep = "")
 
 url <- paste(base, acs_vars, state_tracts, key, sep = "")
 response <- GET(url)
 all_il_tracts <- 
-  jsonlite::fromJSON(content(response, as="text")) %>%
+  jsonlite::fromJSON(content(response, as = "text")) %>%
   data.frame() %>%
   slice(-1)
 
-colnames(all_il_tracts) <- c("Population",
-                             "Total_Living_In_Area", 
-                             "Renter_Count", 
-                             "Income_Per_Capita",
-                             "State",
-                             "County",
-                             "Tract")
+colnames(all_il_tracts) <- 
+  c("Population",
+    "Total_Living_In_Area",
+    "Renter_Count",
+    "Income_Per_Capita",
+    "State",
+    "County",
+    "Tract")
 
 ###################################
 ######### Preparing Data  #########
@@ -83,7 +91,8 @@ colnames(all_il_tracts) <- c("Population",
 
 census_tracts <-
   census_tracts %>%
-  left_join(community_numbers, by = c("Community Area" = "Number"))
+  left_join(community_numbers, 
+            by = c("Community Area" = "Number"))
 
 chicago_rodents_2018 <-
   chicago_rodents %>%
@@ -106,9 +115,10 @@ chicago_rat_community_17 <-
   inner_join(community_numbers, by = c("Community Area" = "Number")) %>%
   select(Community, `Number of Complaints`)
 
-to_numeric <- function(column) {
-  return(as.numeric(levels(column))[column])
-}
+to_numeric <- 
+  function(column) {
+    return(as.numeric(levels(column))[column])
+    }
 
 Chicago_communities <- 
   all_il_tracts %>%
@@ -149,48 +159,56 @@ chicago_rat_community_17 %<>%
 ######### Plot 1: 2018 Citywise Rodent Complaint Comparison #########
 #####################################################################
 
-city_mon_summary <- function(df, date_col, city_name) {
-  monthly_summary <-
-    df %>%
-    group_by(month(date_col, 
+city_mon_summary <- 
+  function(df, date_col, city_name) {
+    monthly_summary <-
+      df %>%
+      group_by(month(date_col, 
                    label = TRUE, 
                     abbr = TRUE)) %>%
-    summarise(`Number of Complaints` = n(),
-                                City = city_name) %>%
-    rename(Month = 1)
-  return(monthly_summary)
-}
+      summarise(`Number of Complaints` = n(),
+                                  City = city_name) %>%
+      rename(Month = 1)
+    return(monthly_summary)
+    }
 
-chicago_months <- city_mon_summary(chicago_rodents_2018,
-                                   mdy(chicago_rodents_2018$`Creation Date`),
-                                   "Chicago")
+chicago_months <- 
+  city_mon_summary(chicago_rodents_2018,
+                   mdy(chicago_rodents_2018$`Creation Date`),
+                   "Chicago")
 
-boston_months <- city_mon_summary(boston_rodents_2018, 
-                                  boston_rodents_2018$open_dt, 
-                                  "Boston")
+boston_months <- 
+  city_mon_summary(boston_rodents_2018,
+                   boston_rodents_2018$open_dt,
+                   "Boston")
 
-dc_months <- city_mon_summary(dc_rodents_2018,
-                              dc_rodents_2018$ADDDATE,
-                              "Washington DC")
+dc_months <- 
+  city_mon_summary(dc_rodents_2018,
+                   dc_rodents_2018$ADDDATE,
+                   "Washington DC")
 
-nyc_months <- city_mon_summary(nyc_rodents_2018,
-                               mdy_hms(nyc_rodents_2018$`Created Date`),
-                               "New York City")
+nyc_months <- 
+  city_mon_summary(nyc_rodents_2018,
+                   mdy_hms(nyc_rodents_2018$`Created Date`),
+                   "New York City")
 
-la_months <- city_mon_summary(la_rodents_2018,
-                              mdy_hms(la_rodents_2018$CreatedDate),
-                              "Los Angeles")
+la_months <-
+  city_mon_summary(la_rodents_2018,
+                   mdy_hms(la_rodents_2018$CreatedDate),
+                   "Los Angeles")
 
-detroit_months <- city_mon_summary(detroit_rodents_2018,
-                                   mdy_hms(detroit_rodents_2018$`Created At`),
-                                   "Detroit")
+detroit_months <- 
+  city_mon_summary(detroit_rodents_2018,
+                   mdy_hms(detroit_rodents_2018$`Created At`),
+                   "Detroit")
 
-city_months_18 <- bind_rows(chicago_months, 
-                            boston_months, 
-                            dc_months, 
-                            nyc_months,
-                            la_months,
-                            detroit_months)
+city_months_18 <- 
+  bind_rows(chicago_months,
+            boston_months,
+            dc_months,
+            nyc_months,
+            la_months,
+            detroit_months)
 
 p1 <-
   city_months_18 %>%
@@ -205,12 +223,17 @@ p1 <-
   labs(title = "Rat Complaints by Highly Affected US Cities in 2018",
     subtitle = "Chicago generally has the most rat complaints all year round",
      caption = "\nSource: City Open Data Portals") +
-  scale_colour_wsj("colors6", "") +
+  scale_color_manual(values = c("#098154", 
+                                "#c72e29",
+                                "#016392", 
+                                "#be9c2e", 
+                                "#fb832d",
+                                "#000000")) +
   theme_wsj() +
   theme(plot.title = element_text(size = 15,
-                                 hjust = 0.2),
+                                 hjust = 0.42),
      plot.subtitle = element_text(size = 13,
-                                 hjust = 0.2),
+                                 hjust = 0.42),
       plot.caption = element_text(size = 10),
        plot.margin = margin(t = 30, 
                             r = 30, 
@@ -218,12 +241,13 @@ p1 <-
                             l = 30, 
                          unit = "pt"),
         axis.title = element_text(size = 13,
-                                  face = "bold"))
+                                  face = "bold")) +
+  guides(color = guide_legend(title = NULL))
 
 ggsave(here("output", "city_compare.pdf"), 
        plot = p1, 
-      width = 9, 
-     height = 6,
+      width = 11, 
+     height = 7.5,
       units = "in")
 
 ##########################################################################
@@ -257,7 +281,7 @@ p2 <-
         x = "Proportion of People Renting in Community",
         y = "Number of Rodent Complaints"
     ) +
-  scale_colour_wsj("colors6", "") +
+  scale_color_wsj("colors6", "Income Level") +
   scale_size(breaks = c(20000, 40000, 60000, 80000),
              labels = c("20000 US dollars",
                         "40000 US dollars",
@@ -269,8 +293,7 @@ p2 <-
                                  hjust = 0.4),
      plot.subtitle = element_text(size = 13,
                                  hjust = 0.4),
-      plot.caption = element_text(size = 10,
-                                 hjust = 3.4),
+      plot.caption = element_text(size = 10),
        plot.margin = margin(t = 30, 
                             r = 30, 
                             b = 30, 
@@ -283,15 +306,75 @@ p2 <-
    legend.position = "right",
         axis.title = element_text(size = 13, 
                                   face = "bold")) +
-  guides(color = guide_legend("Income Level"),
-      linetype = guide_legend("Community Trend"))
+   guides(linetype = guide_legend("Community Trend"))
 
 ggsave(here("output", "community_analysis.pdf"), 
        plot = p2, 
-       width = 9, 
-       height = 6,
-       units = "in")
+      width = 11, 
+     height = 7.5,
+      units = "in")
 
-###########################################################
-######### Plot 3: Seasonality Sanitation Analysis #########
-###########################################################
+###############################################################
+######### Plot 3: 2014 t0 2018 Response Time Analysis #########
+###############################################################
+
+p3 <-
+  chicago_rodents %>%
+  filter(Status == "Completed") %>%
+  mutate(Resolving_Days = as.numeric(mdy(`Completion Date`)) - 
+                          as.numeric(mdy(`Creation Date`)),
+         `Days to Resolve\nRat Complaints` = fct_collapse(
+           factor(Resolving_Days),
+           "within 3 days" = as.character(0:3),
+             "4 to 7 days" = as.character(4:7),
+            "8 to 14 days" = as.character(8:14),
+           "15 to 30 days" = as.character(15:30),
+            "over 30 days" = as.character(31:500)
+         ),
+          year = year(mdy(`Creation Date`)),
+         month = month(mdy(`Creation Date`), 
+                       label = TRUE, 
+                        abbr = TRUE)
+         ) %>%
+  group_by(year, month) %>%
+  ggplot() +
+  geom_bar(aes(x = month, 
+            fill = `Days to Resolve\nRat Complaints`),
+        position = position_stack(reverse = TRUE)) +
+  facet_wrap(vars(year), nrow = 5) +
+  labs(title = "Time to Respond to Rat Complaints Has Dropped\nover the Past Few Years in Chicago",
+    subtitle = "Since 2017, most rat complaints are resolved within 7 days.",
+     caption = "Source: Chicago Data Portal",
+           x = "Month",
+           y = "Number of Resolved Complaints") +
+  scale_fill_manual(values = c("#098154", 
+                               "#016392", 
+                               "#be9c2e", 
+                               "#fb832d", 
+                               "#c72e29",
+                               "#000000"), 
+                 "Days to Resolve\nRat Complaints") +
+  theme_wsj() +
+  theme(plot.title = element_text(size = 15,
+                                 hjust = 0.4),
+     plot.subtitle = element_text(size = 13,
+                                 hjust = 0.4),
+      plot.caption = element_text(size = 10),
+       plot.margin = margin(t = 30, 
+                            r = 30, 
+                            b = 30, 
+                            l = 30, 
+                            unit = "pt"),
+       legend.text = element_text(size = 9.5),
+      legend.title = element_text(size = 11, 
+                                  face = "bold"),
+  legend.direction = "vertical",
+   legend.position = "right",
+        axis.title = element_text(size = 13, 
+                                  face = "bold"))
+
+ggsave(here("output", "response_analysis.pdf"), 
+       plot = p3, 
+      width = 11, 
+     height = 7.5,
+      units = "in")
