@@ -248,10 +248,10 @@ p2 <-
   geom_smooth(data = more_renter_low_income, 
              color = "dodgerblue4",
                 se = F,
-          linetype = "dashed",
+      aes(linetype = "For Lower Income \nCommunties, the Larger\nRenter Proportion, \nthe Less Complaints"),
               size = 1.1) +
   labs(
-    title = "Lower-income Communities with More Renters Are Less \nLikely to Complain about Rats (2017)",
+    title = "Lower-income Communities with More Renters Are Less \nLikely to Complain about Rats in Chicago (2017)",
  subtitle = "Lower-income renters may care more about \nother socioeconomic issues than rat problems",
   caption = "\nSource: Chicago Data Portal \n& American Community Survey",
         x = "Proportion of People Renting in Community",
@@ -263,6 +263,7 @@ p2 <-
                         "40000 US dollars",
                         "60000 US dollars",
                         "80000 US dollars")) +
+  scale_linetype_manual(values = c("dashed", "dotted")) +
   theme_wsj() +
   theme(plot.title = element_text(size = 15,
                                  hjust = 0.7),
@@ -282,7 +283,8 @@ p2 <-
    legend.position = "right",
         axis.title = element_text(size = 13, 
                                   face = "bold")) +
-  guides(color = guide_legend("Income Level"))
+  guides(color = guide_legend("Income Level"),
+      linetype = guide_legend("Community Trend"))
 
 ggsave(here("output", "community_analysis.pdf"), 
        plot = p2, 
