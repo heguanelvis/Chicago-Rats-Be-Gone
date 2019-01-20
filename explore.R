@@ -342,8 +342,8 @@ p3 <-
             fill = `Days to Resolve\nRat Complaints`),
         position = position_stack(reverse = TRUE)) +
   facet_wrap(vars(year), nrow = 5) +
-  labs(title = "Time to Respond to Rat Complaints Has Dropped\nover the Past Few Years in Chicago",
-    subtitle = "Since 2017, most rat complaints are resolved within 7 days.",
+  labs(title = "Time to Respond to Rat Complaints Has Dropped over\nthe Past Few Years in Chicago (2014 to 2018)",
+    subtitle = "Since 2017, most rat complaints are resolved within 7 days",
      caption = "Source: Chicago Data Portal",
            x = "Month",
            y = "Number of Resolved Complaints") +
@@ -371,7 +371,8 @@ p3 <-
   legend.direction = "vertical",
    legend.position = "right",
         axis.title = element_text(size = 13, 
-                                  face = "bold"))
+                                  face = "bold"),
+        strip.text = element_text(face = "bold"))
 
 ggsave(here("output", "response_analysis.pdf"), 
        plot = p3, 
