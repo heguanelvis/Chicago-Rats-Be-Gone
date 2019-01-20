@@ -208,10 +208,10 @@ p1 <-
   scale_colour_wsj("colors6", "") +
   theme_wsj() +
   theme(plot.title = element_text(size = 15,
-                                 hjust = 0.5),
+                                 hjust = 0.2),
      plot.subtitle = element_text(size = 13,
-                                 hjust = 0.5),
-      plot.caption = element_text(size = 12),
+                                 hjust = 0.2),
+      plot.caption = element_text(size = 10),
        plot.margin = margin(t = 30, 
                             r = 30, 
                             b = 30, 
@@ -233,7 +233,7 @@ ggsave(here("output", "city_compare.pdf"),
 more_renter_low_income <-
   chicago_rat_community_17 %>%
   filter(`Income Per Capita` <= 21708) %>%
-  mutate(`Income Level` = "< 180% FPL\n(Federal Poverty Level)")
+  mutate(`Income Level` = "Communities\nunder 180% FPL\n(Federal Poverty Level)")
   
 p2 <- 
   chicago_rat_community_17 %>%
@@ -253,7 +253,7 @@ p2 <-
   labs(
     title = "Lower-income Communities with More Renters Are Less \nLikely to Complain about Rats in Chicago (2017)",
  subtitle = "Lower-income renters may care more about \nother socioeconomic issues than rat problems",
-  caption = "\nSource: Chicago Data Portal \n& American Community Survey",
+  caption = "Source: Chicago Data Portal & American Community Survey",
         x = "Proportion of People Renting in Community",
         y = "Number of Rodent Complaints"
     ) +
@@ -266,11 +266,11 @@ p2 <-
   scale_linetype_manual(values = c("dashed", "dotted")) +
   theme_wsj() +
   theme(plot.title = element_text(size = 15,
-                                 hjust = 0.7),
+                                 hjust = 0.4),
      plot.subtitle = element_text(size = 13,
-                                 hjust = 0.7),
-      plot.caption = element_text(size = 12,
-                                 hjust = 1.45),
+                                 hjust = 0.4),
+      plot.caption = element_text(size = 10,
+                                 hjust = 3.4),
        plot.margin = margin(t = 30, 
                             r = 30, 
                             b = 30, 
