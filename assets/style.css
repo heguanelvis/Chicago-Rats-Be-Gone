@@ -15,10 +15,12 @@ img {
 
 h1 {
     font-size: 36px;
+    text-align: center;
 }
 
 h2 {
     font-size: 26px;
+    text-align: center;
 }
 
 h3 {
@@ -27,23 +29,16 @@ h3 {
 
 p {
     font-size: 18px;
+    text-align: justify;
+    text-justify: inter-word;
 }
 
-.julias-text {
-    font-family: 'Julius Sans One', sans-serif;
+.text-center{
+    text-align: center;
 }
 
 .subtitle-size {
     font-size: 22px;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-justify {
-    text-align: justify;
-    text-justify: inter-word;
 }
 
 .divider {

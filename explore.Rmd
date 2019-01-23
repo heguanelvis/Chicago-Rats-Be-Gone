@@ -5,7 +5,7 @@ output:
     css: assets/style.css
     self-contained: no
 ---
-<h1 class="text-center">CHICAGO RATS BE GONE</h1>
+# CHICAGO RATS BE GONE
 <p class="text-center subtitle-size">Visualizing Chicago's rats infestation and sanitation problems</p>
 <hr class="divider">
 ```{r error=FALSE, warning=FALSE, results='hide', message=FALSE}
@@ -27,8 +27,8 @@ library(jsonlite)
 library(magrittr)
 ```
 
-<h2 class="text-center">Emerging Rat Concerns...</h2>
-<p class="text-justify">In recent years, Chicago has been receiving increasing numbers of rodent infestation complaints. It is important for the city government to actively engage in resolving rat complaints, as rats can cause huge property damage and spread harmful pathogens to humans. This exploratory visualization project illustrates the severity and patterns of rat complaints within the city of Chicago, and seeks to help policymakers to find effective measures to mitigate rodent problems.</p>
+## Emerging Rat Concerns...
+In recent years, Chicago has been receiving increasing numbers of rodent infestation complaints. It is important for the city government to actively engage in resolving rat complaints, as rats can cause huge property damage and spread harmful pathogens to humans. This exploratory visualization project illustrates the severity and patterns of rat complaints within the city of Chicago, and seeks to help policymakers to find effective measures to mitigate rodent problems.
 ```{r cache=TRUE, error=FALSE, warning=FALSE, results='hide', message=FALSE}
 # Reading in Data
 census_tracts <- 
@@ -90,7 +90,7 @@ colnames(all_il_tracts) <-
     "Tract")
 ```
 
-<h2 class="text-center">Understand Rat Problems through Graphs</h2>
+## Understand Rat Problems through Graphs
 ```{r error=FALSE, warning=FALSE, results='hide', message=FALSE}
 # Preparing Data
 census_tracts <-
@@ -160,8 +160,8 @@ chicago_rat_community_17 %<>%
          )
 ```
 
-<h3>"Rat Capital" of United States?</h3>
-<p class="text-justify p-size">In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles and cities that were historically troubled by rodent infestations such as Detroit, Chicago appeared to have the largest number of complaints all year round. From the graph below, we can also see that rat problems were especially prevalent in the summer.</p>
+### "Rat Capital" of United States?
+In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles and cities that were historically troubled by rodent infestations such as Detroit, Chicago appeared to have the largest number of complaints all year round. From the graph below, we can also see that rat problems were especially prevalent in the summer.
 ```{r error=FALSE, fig.height=7., fig.width=11, message=FALSE, warning=FALSE}
 # Data Processing for Plot 1
 city_mon_summary <- 
