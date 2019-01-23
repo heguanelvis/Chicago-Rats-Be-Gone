@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One|Monda');
+/* 
+font-family: 'Julius Sans One', sans-serif;
+font-family: 'Monda', sans-serif;
+*/
+
+body {
+    background: rgb(248,242,228);
+    font-family: 'Monda', sans-serif;
+}
+
+img {
+    display: block;
+    width: 100%;
+}
+
+.julias-text {
+    font-family: 'Julius Sans One', sans-serif;
+}
+
+.title-size {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.subtitle-size {
+    font-size: 24px;
+}
+
+.p-size {
+    font-size: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.divider {
+    border-top: none;
+    border-bottom: 2px black solid;
+}
