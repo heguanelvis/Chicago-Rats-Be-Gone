@@ -2,8 +2,10 @@
 output:
   html_document:
     code_folding: hide
-    css: assets/style.css
+    css: assets/css/style.css
     self-contained: no
+    includes: 
+      in_header: "assets/html/favicon.html"
 ---
 # CHICAGO RATS BE GONE
 <p class="text-center subtitle-size">Visualizing Chicago's rats infestation and sanitation problems</p>
