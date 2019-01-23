@@ -322,3 +322,65 @@ chicago_rat_community_17 %>%
    guides(linetype = guide_legend("Community Trend"))
 ```
 
+### How Has Response Time Changed Over Years?
+The city has become increasingly responsive to rat complaints. In 2016, the mayor's absolute goal for city workers is to respond to all relevant complaints within 5 days, and now it seems that this goal is largely achieved. The graph below shows how days to resolve complaints have dropped. Starting from 2016, the change becomes drastic.
+```{r error=FALSE, fig.height=7., fig.width=11, message=FALSE, warning=FALSE}
+chicago_rodents %>%
+  filter(Status == "Completed") %>%
+  mutate(Resolving_Days = as.numeric(mdy(`Completion Date`)) - 
+                          as.numeric(mdy(`Creation Date`)),
+         `Days to Resolve\nRat Complaints` = fct_collapse(
+           factor(Resolving_Days),
+           "within 3 days" = as.character(0:3),
+             "4 to 7 days" = as.character(4:7),
+            "8 to 14 days" = as.character(8:14),
+           "15 to 30 days" = as.character(15:30),
+            "over 30 days" = as.character(31:500)
+         ),
+          year = year(mdy(`Creation Date`)),
+         month = month(mdy(`Creation Date`), 
+                       label = TRUE, 
+                        abbr = TRUE)
+         ) %>%
+  group_by(year, month) %>%
+  ggplot() +
+  geom_bar(aes(x = month, 
+            fill = `Days to Resolve\nRat Complaints`),
+        position = position_stack(reverse = TRUE)) +
+  facet_wrap(vars(year), nrow = 5) +
+  labs(title = "Time to Resolve Rat Complaints Has Dropped over\nthe Past Few Years in Chicago (2014 to 2018)",
+    subtitle = "Since 2017, most rat complaints are resolved within 7 days",
+     caption = "Source: Chicago Data Portal",
+           x = "Month",
+           y = "Number of Resolved Complaints") +
+  scale_fill_manual(values = c("#098154", 
+                               "#016392", 
+                               "#be9c2e", 
+                               "#fb832d", 
+                               "#c72e29",
+                               "#000000"), 
+                 "Days to Resolve\nRat Complaints") +
+      theme_wsj(
+       base_family = "Times New Roman", 
+      title_family = "Times New Roman"
+      ) +
+  theme(plot.title = element_text(size = 16,
+                                 hjust = 0.4),
+     plot.subtitle = element_text(size = 14,
+                                 hjust = 0.4),
+      plot.caption = element_text(size = 10),
+       plot.margin = margin(t = 30, 
+                            r = 30, 
+                            b = 30, 
+                            l = 30, 
+                            unit = "pt"),
+       legend.text = element_text(size = 10),
+      legend.title = element_text(size = 12, 
+                                  face = "bold"),
+  legend.direction = "vertical",
+   legend.position = "right",
+        axis.title = element_text(size = 13, 
+                                  face = "bold"),
+        strip.text = element_text(face = "bold"))
+```
+
