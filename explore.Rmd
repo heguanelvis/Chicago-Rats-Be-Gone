@@ -5,15 +5,9 @@ output:
     css: assets/style.css
     self-contained: no
 ---
-<h1 class="julias-text text-center title-size">CHICAGO RATS BE GONE</h1>
+<h1 class="text-center">CHICAGO RATS BE GONE</h1>
 <p class="text-center subtitle-size">Visualizing Chicago's rats infestation and sanitation problems</p>
 <hr class="divider">
-
-<h2 class="text-center">Emerging Rat Concerns...</h2>
-<p class="text-justify p-size">In recent years, Chicago has been receiving increasing numbers of rodent infestation complaints. It is important for the city government to actively engage in resolving rat complaints, as rats can cause huge property damage and spread harmful pathogens to humans. This exploratory visualization project illustrates the severity and patterns of rat complaints within the city of Chicago, and seeks to help policymakers to find effective measures to mitigate rodent problems.</p>
-<br>
-
-<h2 class="text-center">Understand Rat Problems through Graphs</h2>
 ```{r error=FALSE, warning=FALSE, results='hide', message=FALSE}
 # Libraries
 library(lubridate)
@@ -33,6 +27,8 @@ library(jsonlite)
 library(magrittr)
 ```
 
+<h2 class="text-center">Emerging Rat Concerns...</h2>
+<p class="text-justify">In recent years, Chicago has been receiving increasing numbers of rodent infestation complaints. It is important for the city government to actively engage in resolving rat complaints, as rats can cause huge property damage and spread harmful pathogens to humans. This exploratory visualization project illustrates the severity and patterns of rat complaints within the city of Chicago, and seeks to help policymakers to find effective measures to mitigate rodent problems.</p>
 ```{r cache=TRUE, error=FALSE, warning=FALSE, results='hide', message=FALSE}
 # Reading in Data
 census_tracts <- 
@@ -66,9 +62,7 @@ la_rodents_2018 <-
 detroit_rodents_2018 <- 
   read_csv(here("data",
                 "Detroit_Rodent_2018.csv"))
-```
 
-```{r cache=TRUE, error=FALSE, warning=FALSE, results='hide', message=FALSE}
 # Scraping Data from ACS
 base <- "https://api.census.gov/data/2016/acs/acs5?"
 acs_vars <- "get=B00001_001E,B07013_001E,B07013_003E,B19301_001E"
@@ -96,6 +90,7 @@ colnames(all_il_tracts) <-
     "Tract")
 ```
 
+<h2 class="text-center">Understand Rat Problems through Graphs</h2>
 ```{r error=FALSE, warning=FALSE, results='hide', message=FALSE}
 # Preparing Data
 census_tracts <-
@@ -165,10 +160,9 @@ chicago_rat_community_17 %<>%
          )
 ```
 
-
 <h3>"Rat Capital" of United States?</h3>
-<p class="text-justify p-size">In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles and cities that were historically troubled by rodent infestations such as Detroit, Chicago appeared to have the largest number of complaints all year round. Rat problems were found to be especially prevalent in the summer.</p>
-```{r error=FALSE, warning=FALSE, results='hide', message=FALSE}
+<p class="text-justify p-size">In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles and cities that were historically troubled by rodent infestations such as Detroit, Chicago appeared to have the largest number of complaints all year round. From the graph below, we can also see that rat problems were especially prevalent in the summer.</p>
+```{r error=FALSE, fig.height=7., fig.width=11, message=FALSE, warning=FALSE}
 # Data Processing for Plot 1
 city_mon_summary <- 
   function(df, date_col, city_name) {
@@ -220,9 +214,7 @@ city_months_18 <-
             nyc_months,
             la_months,
             detroit_months)
-```
 
-```{r error=FALSE, fig.height=7., fig.width=11, message=FALSE, warning=FALSE}
 # Plot 1
 city_months_18 %>%
   ggplot(aes(x = Month, 
@@ -244,11 +236,14 @@ city_months_18 %>%
                                 "#be9c2e", 
                                 "#fb832d",
                                 "#000000")) +
-  theme_wsj() +
+  theme_wsj(
+       base_family = "Times New Roman", 
+      title_family = "Times New Roman"
+      ) +
   theme(
-        plot.title = element_text(size = 15,
+        plot.title = element_text(size = 16,
                                  hjust = 0.42),
-     plot.subtitle = element_text(size = 13,
+     plot.subtitle = element_text(size = 14,
                                  hjust = 0.42),
       plot.caption = element_text(size = 10),
                 plot.margin = margin(t = 30, 
@@ -257,7 +252,8 @@ city_months_18 %>%
                                      l = 30, 
                                   unit = "pt"),
         axis.title = element_text(size = 13,
-                                  face = "bold")
+                                  face = "bold"),
+       legend.text = element_text(size = 13)
      ) +
   guides(color = guide_legend(title = NULL))
 ```
