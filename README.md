@@ -1,6 +1,6 @@
 # Chicago Rats Be Gone
 
-## Project Discription
+## Project Description
 In recent years, Chicago has been receiving increasing numbers of rodent infestation complaints. It is important for the city government to actively engage in resolving rat complaints, as rats can cause huge property damage and spread harmful pathogens to humans. This exploratory visualization project illustrates the severity and patterns of rat complaints within the city of Chicago, and seeks to help policymakers to find effective measures to mitigate rodent problems.
 
 <a href="https://heguanelvis.github.io/Chicago-Rats-Be-Gone/explore.html">Click Here to See the Project!</a>

@@ -348,7 +348,7 @@ chicago_rodents %>%
             fill = `Days to Resolve\nRat Complaints`),
         position = position_stack(reverse = TRUE)) +
   facet_wrap(vars(year), nrow = 5) +
-  labs(title = "Time to Resolve Rat Complaints Has Dropped over\nthe Past Few Years in Chicago (2014 to 2018)",
+  labs(title = "Rat Complaints Response Time Has Dropped over\nthe Past Few Years in Chicago (2014 to 2018)",
     subtitle = "Since 2017, most rat complaints are resolved within 7 days",
      caption = "Source: Chicago Data Portal",
            x = "Month",
