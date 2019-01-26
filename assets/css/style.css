@@ -4,13 +4,18 @@ font-family: 'Monda', sans-serif;
 */
 
 body {
-    background: rgb(248,242,228);
+    background: rgb(85, 124, 102);
     font-family: 'Monda', sans-serif;
+    color: linen;
 }
 
 img {
     display: block;
     width: 100%;
+    border: 1px solid linen;
+    border-radius: 4px;
+    padding: 4px;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -43,5 +48,29 @@ p {
 
 .divider {
     border-top: none;
-    border-bottom: 2px black solid;
+    border-bottom: 2px linen solid;
+}
+
+button {
+    background: linen !important;
+    font-size: 18px;
+    padding: 2px 5px;
+}
+
+button:hover,
+button:active {
+    background: white !important;
+}
+
+.research_link {
+    color: #fffb0b;
+}
+
+.research_link:hover,
+.research_link:active{
+    color: #a9f9ff;
+}
+
+pre.r {
+    background: linen !important;
 }
