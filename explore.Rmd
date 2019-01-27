@@ -1,4 +1,5 @@
 ---
+title: "CHICAGO RATS BE GONE"
 output:
   html_document:
     code_folding: hide
@@ -7,7 +8,6 @@ output:
     includes: 
       in_header: "assets/html/favicon.html"
 ---
-# CHICAGO RATS BE GONE
 <p class="subtitle-size text-center"><img class="logo" src="assets/images/rat.png" alt="rat">Visualizing Chicago's rats infestation and sanitation problems</p>
 <hr class="divider">
 ```{r error=FALSE, warning=FALSE, results='hide', message=FALSE}

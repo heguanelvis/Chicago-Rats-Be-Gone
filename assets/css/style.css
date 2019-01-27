@@ -87,7 +87,7 @@ pre.r {
     background: linen !important;
 }
 
-@media only screen and (min-width: 1400px) {
+@media only screen and (min-width: 1380px) {
     .footer {
         position: fixed;
         left: 0;
