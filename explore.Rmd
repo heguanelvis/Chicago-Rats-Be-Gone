@@ -29,6 +29,9 @@ library(jsonlite)
 library(magrittr)
 library(grid)
 library(ggmap)
+library(sf)
+library(cowplot)
+library(ggplotify)
 ```
 
 ## Emerging Rat Concerns...
@@ -113,6 +116,22 @@ census_tracts <-
 chicago_rodents_2018 <-
   chicago_rodents %>%
   filter(year(mdy(`Creation Date`)) == 2018)
+
+chicago_rodents_2017 <-
+  chicago_rodents %>%
+  filter(year(mdy(`Creation Date`)) == 2017)
+
+chicago_rodents_2016 <-
+  chicago_rodents %>%
+  filter(year(mdy(`Creation Date`)) == 2016)
+
+chicago_rodents_2015 <-
+  chicago_rodents %>%
+  filter(year(mdy(`Creation Date`)) == 2015)
+
+chicago_rodents_2014 <-
+  chicago_rodents %>%
+  filter(year(mdy(`Creation Date`)) == 2014)
   
 boston_rodents_2018 <-
   boston_311 %>%
@@ -134,7 +153,7 @@ chicago_rat_community_17 <-
 to_numeric <- 
   function(column) {
     return(as.numeric(levels(column))[column])
-    }
+  }
 
 Chicago_communities <- 
   all_il_tracts %>%
@@ -209,7 +228,7 @@ custom_theme <-
 ### "Rat Capital" of United States?
 In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles and cities that were historically troubled by rodent infestations such as Detroit, Chicago appeared to have the largest number of complaints all year round. From the graph below, we can also see that rat problems were especially prevalent in the summer.
 ```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
-# Data Processing for Plot 1
+# Data Processing for Plot
 city_mon_summary <- 
   function(df, date_col, population, city_name) {
     monthly_summary <-
@@ -223,7 +242,7 @@ city_mon_summary <-
                                   City = city_name) %>%
       rename(Month = 1)
     return(monthly_summary)
-    }
+  }
 
 chicago_months <- 
   city_mon_summary(chicago_rodents_2018,
@@ -269,18 +288,19 @@ city_months_18 <-
             la_months,
             detroit_months)
 
-# Plot 1
-custom_tt_color <- function(text, color, x, y) {
-  annotation_custom(
-    grob = textGrob(label = text, 
-                    hjust = 0, 
-                       gp = gpar(col = color, 
-                            fontsize = 16,
-                            fontface = "bold")),
-    xmin = x, xmax = x,
-    ymin = y, ymax = y
-  )   
-}
+# Plot
+custom_tt_color <- 
+  function(text, color, x, y) {
+    annotation_custom(
+      grob = textGrob(label = text, 
+                      hjust = 0, 
+                         gp = gpar(col = color, 
+                              fontsize = 16,
+                              fontface = "bold")),
+      xmin = x, xmax = x,
+      ymin = y, ymax = y
+    )   
+  }
 
 p1 <- city_months_18 %>%
   ggplot(aes(x = Month, 
@@ -312,12 +332,16 @@ p1 <- city_months_18 %>%
   theme(     
              plot.title = element_text(hjust = 0.47),
           plot.subtitle = element_text(hjust = 0.47),
+            legend.text = element_text(size = 13),
+            axis.line.y = element_blank(),
+      legend.background = element_rect(),
         legend.position = "top",
-            legend.text = element_text(size = 13)
+        legend.box.just = "top",
+   legend.justification = "center"
      ) +
   guides(color = guide_legend(title = NULL)) +
-  custom_tt_color("Chicago Has the Most Rat Complaints per 10000 Population All Year Round", "black", 1.3, 25.4) +
-  custom_tt_color("Chicago", "#e11f27", 1.3, 25.4)
+  custom_tt_color("Chicago Has the Most Rat Complaints per 10000 Population All Year Round", "black", 1.3, 25.7) +
+  custom_tt_color("Chicago", "#e11f27", 1.3, 25.7)
 
 p1 <- ggplot_gtable(ggplot_build(p1))
 p1$layout$clip[p1$layout$name == "panel"] <- "off"
@@ -328,7 +352,7 @@ grid.draw(p1)
 ### Distribution of Sanitation Code Violations and Rat Complaints
 Although rat complaint distribution is not equivalent of the actual rat distribution, Chicago Lincoln Park Zoo has recently conducted <a href="https://www.frontiersin.org/articles/10.3389/fevo.2018.00189/full" target="_blank" class="research_link">research</a> indicating that it can be highly reflective of rodent infestation situation. The research also shows that the abundance of rats is potentially related to the abundance of garbage and other types of sanitation problems. That begs the question where rats and garbage are complained frequently and how much they overlap in different areas of Chicago. As is shown in the map below, we can see that garbage and rats are connected.
 ```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
-# Data Processing for Plot 2
+# Data Processing for Plot 
 GOOGLE_TOKEN = read_delim(here("data", "GoogleAuth.txt"),
                         delim = "/", 
                     col_names = F)$X1
@@ -357,7 +381,7 @@ chicago_sanitation_geo <-
 chicago_geo <- bind_rows(chicago_rodent_geo,
                          chicago_sanitation_geo)
 
-# Plot 2
+# Plot 
 ggmap(chicago) +
   geom_point(aes(x = `Longitude`,
                  y = `Latitude`,
@@ -367,7 +391,7 @@ ggmap(chicago) +
               data = chicago_geo) +
   labs(title = "Rodent Infestations Were Generally Located \nnear Places with Sanitation Concerns (2018)",
     subtitle = "The north of Chicago is slightly more infested than the south of Chicago\n",
-     caption = "Chicago Data Portal",
+     caption = "Source: Chicago Data Portal",
            x = "Longitude",
            y = "Latitude") +
   scale_x_continuous(limits = c(-88.03, -87.33), expand = c(0, 0)) +
@@ -377,8 +401,8 @@ ggmap(chicago) +
                                 )) + 
   custom_theme +
   theme(   plot.title = element_text(hjust = 1.4),
-        plot.subtitle = element_text(hjust = 7),
-         plot.caption = element_text(hjust = 1.65),
+        plot.subtitle = element_text(hjust = 145),
+         plot.caption = element_text(hjust = 1.78),
          legend.title = element_text( size = 13, 
                                       face = "bold"),
           legend.text = element_text( size = 12),
@@ -386,10 +410,70 @@ ggmap(chicago) +
                                       size = 0.7))
 ```
 
+### Rats and Empty Homes
+Rats, being the ultimate squatters, see vacant houses as their prime real estate. Such places offer hassle-free shelter; nooks and crannies for hiding and playing; carpeting for nests; and toilet bowls for swimming. The best houses for rodents are those that have been vacant for a while or haven’t yet been fixed up, as these often provide a convenient water supply via leaks or other accumulated moisture. Vacant Properties that are foreclosed generally entail high risks, and once a single unit has been infested, it is only a matter of time before rats venture out into the neighborhood in search of food and new places to inhabit. The plot below shows that communities with more vacant properties are more likely to attract rats.
+```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+# Data Processing for Plot 
+chicago_rat_community <-
+  chicago_rodents %>%
+  group_by(`Community Area`) %>%
+  summarise(`Number of Complaints` = n()) %>%
+  inner_join(community_numbers, by = c("Community Area" = "Number")) %>%
+  select(Community, `Number of Complaints`)
+
+chicago_rat_property <-
+  chicago_rat_community %>%
+  inner_join(chicago_vacant_property, by = "Community")
+
+# Plot 
+chicago_rat_property %>%
+  ggplot(aes(x = `Vacant Housing Units`,
+             y = `Number of Complaints`)) +
+  geom_boxplot(aes(group = cut_width(`Vacant Housing Units`, 
+                                        width = 480,
+                                     boundary = 0),
+                    fill = cut_width(`Vacant Housing Units`, 
+                                        width = 480,
+                                     boundary = 0)),
+                   color = "black") +
+  labs(title = "Communities with More Vacant Properties Are More Likely to\nSee Rodent Complaints in Chicago (2014 to 2018)             ",
+    subtitle = "Perfect insulation in the walls for nesting may be what is attracting rodents",
+     caption = "Source: American Community Survey & Chicago Data Portal",
+           x = "Number of Vacant Housing Units") +
+  xlim(0, 3850) +
+  scale_fill_manual(
+    "Groups of Communities\nwith Different Numbers\nof Vacant Housing Units",
+    values = c("springgreen4",
+               "springgreen3",
+                "goldenrod1",
+                "goldenrod3",
+                "darkorange",
+                "orangered",
+                "firebrick1",
+                "firebrick"),
+    labels = c("[0, 480]",
+               "[480, 960)",
+               "[960, 1440)",
+               "[1440, 1920)",
+               "[1920, 2400)",
+               "[2400, 2880)",
+               "[2880, 3360)",
+               "[3360, 3840)")
+    ) +
+  custom_theme +
+  theme(plot.title = element_text(hjust = 1.8),
+     plot.subtitle = element_text(hjust = 1.4),
+      plot.caption = element_text(hjust = 1.79),
+       legend.text = element_text( size = 12),
+      legend.title = element_text( size = 13, 
+                                   face = "bold"),
+       axis.line.y = element_blank())
+```
+
 ### How Has Response Time Changed Over Years?
 The city has become increasingly responsive to rat complaints. In 2016, the mayor's absolute goal for city workers was to respond to all relevant complaints within 5 days, and now it seems that this goal is largely achieved. The bar chart below shows how days to resolve complaints have been decreasing. Starting from 2016, response time has dropped drastically and the number of total rat complaints has also started to go down.
 ```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
-# Plot 3
+# Plot 
 chicago_rodents %>%
   filter(Status == "Completed") %>%
   mutate(Resolving_Days = as.numeric(mdy(`Completion Date`)) - 
@@ -427,71 +511,175 @@ chicago_rodents %>%
   custom_theme +
   theme(plot.title = element_text(hjust = 0.55),
      plot.subtitle = element_text(hjust = 0.55),
-      plot.caption = element_text(hjust = 1.24),
+      plot.caption = element_text(hjust = 1.26),
        legend.text = element_text( size = 10),
       legend.title = element_text( size = 12, 
                                    face = "bold"),
         strip.text = element_text( face = "bold",
                                    size = 12),
+       axis.line.y = element_blank(),
   strip.background = element_blank())
 ```
 
-### Rats and Empty Homes
-Rats, being the ultimate squatters, see vacant houses as their prime real estate. Such places offer hassle-free shelter; nooks and crannies for hiding and playing; carpeting for nests; and toilet bowls for swimming. The best houses for rodents are those that have been vacant for a while or haven’t yet been fixed up, as these often provide a convenient water supply via leaks or other accumulated moisture. Vacant Properties that are foreclosed generally entail high risks, and once a single unit has been infested, it is only a matter of time before rats venture out into the neighborhood in search of food and new places to inhabit. The plot below shows that communities with more vacant properties are more likely to attract rats.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
-# Data Processing for Plot 4
-chicago_rat_community <-
-  chicago_rodents %>%
-  group_by(`Community Area`) %>%
-  summarise(`Number of Complaints` = n()) %>%
-  inner_join(community_numbers, by = c("Community Area" = "Number")) %>%
-  select(Community, `Number of Complaints`)
+### Response Time Reduced for All Communities
+From 2014 to 2018, Chicago's overall response time to rat complaints have been steadily decreasing for all seasons. Besides seasonality analysis, looking at response time changes at a community level may also help policymakers more effectively target potential rat issues in the future. The map set below shows that the irresponsiveness problem appeared most severe in 2015, especially in the west of Chicago, and shortly after, almost all Chicago communities became much more responsive to rat complaints. 
+```{r error=FALSE, fig.height=10.25, fig.width=11, message=FALSE, warning=FALSE}
+# Data Processing and Mapping Preparation
+cowplot_theme <-
+  theme(panel.background = element_rect(fill = "linen"),
+         plot.background = element_rect(fill = "linen"),
+       legend.background = element_rect(fill = "linen"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+            panel.border = element_blank())
 
-chicago_rat_property <-
-  chicago_rat_community %>%
-  inner_join(chicago_vacant_property, by = "Community")
+create_response <- 
+  function(year_data) {
+    result <- 
+      year_data %>%
+      filter(Status == "Completed") %>%
+      mutate(Resolving_Days = as.numeric(mdy(`Completion Date`)) - 
+                              as.numeric(mdy(`Creation Date`))) %>%
+      group_by(`Community Area`) %>%
+      summarise(avg_resolving_days = ceiling(mean(Resolving_Days))) %>%
+      mutate(`Community Area` = as.character(`Community Area`),
+            `Days to Resolve Rat Complaints` =
+              fct_collapse(factor(avg_resolving_days),
+               "within 3 days" = as.character(0:3),
+                 "4 to 7 days" = as.character(4:7),
+                "8 to 14 days" = as.character(8:14),
+               "15 to 30 days" = as.character(15:30),
+                "over 30 days" = as.character(31:500))) %>%
+      filter(!is.na(`Community Area`))
+    return(result)
+  }
 
-# Plot 4
-chicago_rat_property %>%
-  ggplot(aes(x = `Vacant Housing Units`,
-             y = `Number of Complaints`)) +
-  geom_boxplot(aes(group = cut_width(`Vacant Housing Units`, 
-                                        width = 480,
-                                     boundary = 0),
-                    fill = cut_width(`Vacant Housing Units`, 
-                                        width = 480,
-                                     boundary = 0)),
-                   color = "black") +
-  labs(title = "Communities with More Vacant Properties Are More Likely to\nSee Rodent Complaints in Chicago (2014 to 2018)             ",
-    subtitle = "Perfect insulation in the walls for nesting may be what is attracting rodents",
-     caption = "American Community Survey & Chicago Data Portal",
-           x = "Number of Vacant Housing Units") +
-  xlim(0, 3850) +
-  scale_fill_manual(
-    "Groups of Communities\nwith Different Numbers\nof Vacant Housing Units",
-    values = c("springgreen4",
-               "springgreen3",
-                "goldenrod1",
-                "goldenrod3",
-                "darkorange",
-                "orangered",
-                "firebrick1",
-                "firebrick"),
-    labels = c("[0, 480]",
-               "[480, 960)",
-               "[960, 1440)",
-               "[1440, 1920)",
-               "[1920, 2400)",
-               "[2400, 2880)",
-               "[2880, 3360)",
-               "[3360, 3840)")
-    ) +
+response_2014 <- create_response(chicago_rodents_2014)
+response_2015 <- create_response(chicago_rodents_2015)
+response_2016 <- create_response(chicago_rodents_2016)
+response_2017 <- create_response(chicago_rodents_2017)
+response_2018 <- create_response(chicago_rodents_2018)
+
+chicago_shp <- 
+  read_sf(here("data",
+               "geo_export_b4a17cee-2ce2-4bde-9c91-82d509e2a7c9.shp"))
+
+create_res_plot <- 
+  function(year_response, year) {
+    year_map <- 
+      chicago_shp %>%
+      left_join(year_response, by = c("area_num_1" = "Community Area"))
+    if(year == 2014) {
+      scale_map <- 
+        scale_fill_manual(values = c("#ffffbf", # 3
+                                     "#fdae61", # 4
+                                     "#d7191c"  # 5
+                                     ))
+    } else if (year == 2015) {
+      scale_map <-
+        scale_fill_manual(values = c("#a6d96a", # 2
+                                     "#fdae61", # 4
+                                     "#d7191c"  # 5
+                                     ))
+    } else if (year == 2016) {
+      scale_map <-
+        scale_fill_manual(values = c("#a6d96a", # 2
+                                     "#ffffbf"  # 3
+                                     ))
+    } else if (year == 2017) {
+      scale_map <- 
+        scale_fill_manual(values = c("#1a9641", # 1
+                                     "#a6d96a"  # 2
+                                     ))
+    } else if (year == 2018) {
+      scale_map <- 
+        scale_fill_manual(values = c("#1a9641", # 1
+                                     "#a6d96a"  # 2
+                                     ))
+    }
+    return (
+      ggplot(year_map) +
+        geom_sf(aes(fill = `Days to Resolve Rat Complaints`)) +
+        coord_sf(  datum = NA) +
+        background_grid(minor = "none") +
+        scale_map +
+        cowplot_theme +
+        theme(legend.position = "none")
+    )
+  }
+
+# Plot
+map_14 <- create_res_plot(response_2014, 2014)
+map_15 <- create_res_plot(response_2015, 2015)
+map_16 <- create_res_plot(response_2016, 2016)
+map_17 <- create_res_plot(response_2017, 2017)
+map_18 <- create_res_plot(response_2018, 2018)
+
+legend_response <-
+  response_2014 %>%
+  mutate(`Days to Resolve Rat Complaints` = as.character(`Days to Resolve Rat Complaints`))
+  
+legend_response[[1,3]] <- "within 3 days"
+legend_response[[3,3]] <- "4 to 7 days"
+
+map_legend <-
+  chicago_shp %>%
+  left_join(legend_response, by = c("area_num_1" = "Community Area")) %>%
+  ggplot() +
+  geom_sf(aes(fill = `Days to Resolve Rat Complaints`)) +
+  coord_sf(datum = NA) +
+  cowplot_theme +
+  theme(legend.text = element_text(size = 13),
+       legend.title = element_text(size = 14, 
+                                  face = "bold")) +
+  scale_fill_manual(values = c("#fdae61", # 4
+                               "#a6d96a", # 2
+                               "#ffffbf", # 3
+                               "#d7191c", # 5
+                               "#1a9641"  # 1
+                               ),
+                    breaks = c("within 3 days",
+                               "4 to 7 days",
+                               "8 to 14 days",
+                               "15 to 30 days",
+                               "over 30 days")) +
+   background_grid(major = "none", minor = "none")
+
+legend <- get_legend(map_legend)
+
+maps <-
+  plot_grid(map_14, 
+            map_15, 
+            map_16,
+            legend,
+            map_17,
+            map_18,
+            labels = c("2014", "2015", "2016", " ", "2017", "2018"), 
+            ncol = 3) +
+  background_grid(major = "none", minor = "none") +
+  cowplot_theme +
+  theme(plot.background = element_rect(color = "linen", size = 2))
+
+maps <- as.ggplot(maps)
+maps +
+  labs(title = "All Chicago Communities Have Reduced Average\nResponse Time to Rat Complaints Over Years",
+    subtitle = "Response time to rat complaints peaked at 2015 especially around\ncommunities in the west, and then dropped sharply",
+     caption = "Source: Chicago Data Portal") +
   custom_theme +
-  theme(plot.title = element_text(hjust = 1.8),
-     plot.subtitle = element_text(hjust = 1.4),
-      plot.caption = element_text(hjust = 1.61),
-       legend.text = element_text( size = 12),
-      legend.title = element_text( size = 13, 
-                                   face = "bold"))
+  theme(
+                axis.title.x = element_blank(),
+                 axis.text.x = element_blank(),
+                axis.ticks.x = element_blank(),
+                axis.title.y = element_blank(),
+                axis.text.y  = element_blank(),
+                axis.ticks.y = element_blank(),
+                 axis.line.x = element_line(color = "linen", size = 1),
+                 axis.line.y = element_line(color = "linen", size = 1),
+          axis.line.x.bottom = element_line(color = "linen", size = 1),
+            axis.line.y.left = element_line(color = "linen", size = 1),
+             plot.background = element_rect( fill = "linen"),
+                  plot.title = element_text(hjust = 0.5),
+               plot.subtitle = element_text(hjust = 0.5)
+    )
 ```
 
