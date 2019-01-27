@@ -8,7 +8,7 @@ output:
       in_header: "assets/html/favicon.html"
 ---
 # CHICAGO RATS BE GONE
-<p class="text-center subtitle-size">Visualizing Chicago's rats infestation and sanitation problems</p>
+<p class="subtitle-size text-center"><img class="logo" src="assets/images/rat.png" alt="rat">Visualizing Chicago's rats infestation and sanitation problems</p>
 <hr class="divider">
 ```{r error=FALSE, warning=FALSE, results='hide', message=FALSE}
 # Libraries
@@ -226,7 +226,7 @@ custom_theme <-
 ```
 
 ### "Rat Capital" of United States?
-In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles and cities that were historically troubled by rodent infestations such as Detroit, Chicago appeared to have the largest number of complaints all year round. From the graph below, we can also see that rat problems were especially prevalent in the summer.
+In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles, and cities that were historically troubled by rodent infestations such as Detroit, Chicago not only has the highest total complaint count, but appeared to have the largest number of complaints per 10000 population all year round. From the graph below, we can also see that rat problems were especially prevalent in the summer.
 ```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
 # Data Processing for Plot
 city_mon_summary <- 
@@ -471,7 +471,7 @@ chicago_rat_property %>%
 ```
 
 ### How Has Response Time Changed Over Years?
-The city has become increasingly responsive to rat complaints. In 2016, the mayor's absolute goal for city workers was to respond to all relevant complaints within 5 days, and now it seems that this goal is largely achieved. The bar chart below shows how days to resolve complaints have been decreasing. Starting from 2016, response time has dropped drastically and the number of total rat complaints has also started to go down.
+The city has become increasingly responsive to rat complaints. In 2016, the mayor's absolute goal for city workers was to respond to all relevant complaints within 5 days, and now it seems that this goal is largely achieved. The bar chart below shows how days to resolve complaints have been decreasing throughout different months of years. Starting from 2016, response time has dropped drastically and the number of total rat complaints has also started to go down.
 ```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
 # Plot 
 chicago_rodents %>%
@@ -683,3 +683,7 @@ maps +
     )
 ```
 
+<div class="footer">
+  <p><a class="footer_link" href="https://github.com/heguanelvis/Chicago-Rats-Be-Gone" target="_blank">Chicago Rats Be Gone</a></p>
+  <p>Created by <a class="footer_link" href="https://github.com/heguanelvis" target="_blank">Guan He</a></p>
+</div>
