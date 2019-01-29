@@ -66,6 +66,7 @@ button {
 }
 
 button:hover,
+button:focus,
 button:active {
     background: white !important;
 }
@@ -79,6 +80,17 @@ a:active,
 a:focus {
     color: #a9f9ff !important;
     text-decoration: none !important; 
+}
+
+a#rmd-show-all-code,
+a#rmd-hide-all-code,
+a#rmd-show-all-code:hover,
+a#rmd-show-all-code:focus,
+a#rmd-show-all-code:active,
+a#rmd-hide-all-code:hover,
+a#rmd-hide-all-code:focus,
+a#rmd-hide-all-code:active {
+    color: black !important;
 }
 
 pre.r {
