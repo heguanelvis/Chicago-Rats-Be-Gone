@@ -2,8 +2,11 @@
 title: "CHICAGO RATS BE GONE"
 output:
   html_document:
+    toc: true 
+    toc_float: true
+    toc_depth: 3 
     code_folding: hide
-    css: assets/css/style.css
+    css: "assets/css/style.css"
     self-contained: no
     includes: 
       in_header: "assets/html/favicon.html"
@@ -683,7 +686,8 @@ maps +
     )
 ```
 
-<div class="footer">
-  <p><a class="footer_link" href="https://github.com/heguanelvis/Chicago-Rats-Be-Gone" target="_blank">Chicago Rats Be Gone</a></p>
-  <p>Created by <a class="footer_link" href="https://github.com/heguanelvis" target="_blank">Guan He</a></p>
-</div>
+<hr class="divider"/>
+<p class="text-center"><a href="https://github.com/heguanelvis/Chicago-Rats-Be-Gone">Chicago Rats Be Gone</a></p>
+<p class="text-center">Created by <a href="https://github.com/heguanelvis">Guan He</a></p>
+<p class="text-center"><span><em>guanh@uchicago.edu</em></span></p>
+<p class="text-center"><a href="https://github.com/heguanelvis"><i class="fab fa-github-square"></i></a></p>
