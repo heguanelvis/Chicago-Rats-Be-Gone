@@ -11,7 +11,7 @@ output:
     includes: 
       in_header: "assets/html/favicon.html"
 ---
-<p class="subtitle-size text-center"><img class="logo" src="assets/images/rat.png" alt="rat">Visualizing Chicago's rats infestation and sanitation problems</p>
+<p class="subtitle-size text-center"><img class="logo animated infinite pulse" src="assets/images/rat.png" alt="rat">Visualizing Chicago's rats infestation and sanitation problems</p>
 <hr class="divider">
 ```{r error=FALSE, warning=FALSE, results='hide', message=FALSE}
 # Libraries
