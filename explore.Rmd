@@ -354,7 +354,7 @@ grid.draw(p1)
 
 ### Distribution of Sanitation Code Violations and Rat Complaints
 Although rat complaint distribution is not equivalent of the actual rat distribution, Chicago Lincoln Park Zoo has recently conducted <a href="https://www.frontiersin.org/articles/10.3389/fevo.2018.00189/full" target="_blank" class="research_link">research</a> indicating that it can be highly reflective of rodent infestation situation. The research also shows that the abundance of rats is potentially related to the abundance of garbage and other types of sanitation problems. That begs the question where rats and garbage are complained frequently and how much they overlap in different areas of Chicago. As is shown in the map below, we can see that garbage and rats are connected.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+```{r error=FALSE, fig.height=8.4, fig.width=9, message=FALSE, warning=FALSE}
 # Data Processing for Plot 
 GOOGLE_TOKEN = read_delim(here("data", "GoogleAuth.txt"),
                         delim = "/", 
@@ -372,14 +372,14 @@ chicago_rodent_geo <-
   group_by(Longitude, Latitude) %>%
   summarise(`Complaint Count` = n()) %>%
   filter(`Complaint Count` > 6, !is.na(Longitude)) %>%
-  mutate(`Complaint Type` = "Rodent Infestation (>6 Times)")
+  mutate(`Complaint Type` = "Rat Complaints\n(>6 Times)")
 
 chicago_sanitation_geo <-
   chicago_sanitation_2018 %>%
   group_by(Longitude, Latitude) %>%
   summarise(`Complaint Count` = n()) %>%
   filter(`Complaint Count` > 3, !is.na(Longitude)) %>%
-  mutate(`Complaint Type` = "Sanitation Code Violation (>3 Times)")
+  mutate(`Complaint Type` = "Sanitation Code\nViolations\n(>3 Times)")
 
 chicago_geo <- bind_rows(chicago_rodent_geo,
                          chicago_sanitation_geo)
@@ -392,25 +392,39 @@ ggmap(chicago) +
               size = `Complaint Count`),
              alpha = 0.75,
               data = chicago_geo) +
-  labs(title = "Rodent Infestations Were Generally Located \nnear Places with Sanitation Concerns (2018)",
-    subtitle = "The north of Chicago is slightly more infested than the south of Chicago\n",
+  labs(title = "Rat Complaints Were Generally Located near\nPlaces with Sanitation Concerns (2018)",
+    subtitle = "The north of Chicago has slightly more complaints than the south",
      caption = "Source: Chicago Data Portal",
            x = "Longitude",
            y = "Latitude") +
-  scale_x_continuous(limits = c(-88.03, -87.33), expand = c(0, 0)) +
-  scale_y_continuous(limits = c(41.63, 42.05), expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-88.13, -87.23), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(41.58, 42.1), expand = c(0, 0)) +
   scale_color_manual(values = c("#e11f27", # red
                                 "#037dae" # blue
                                 )) + 
   custom_theme +
-  theme(   plot.title = element_text(hjust = 1.4),
-        plot.subtitle = element_text(hjust = 145),
-         plot.caption = element_text(hjust = 1.78),
-         legend.title = element_text( size = 13, 
-                                      face = "bold"),
-          legend.text = element_text( size = 12),
-          axis.line.y = element_line(color = "black",
-                                      size = 0.7))
+  theme(legend.justification = "center",
+                  plot.title = element_text(hjust = 0.6),
+               plot.subtitle = element_text(hjust = 0.6),
+                 plot.margin = margin(t = 30,
+                                      r = 42, 
+                                      l = 0, 
+                                      b = 30,
+                                   unit = "pt"),
+                legend.title = element_text( size = 13, 
+                                             face = "bold"),
+                 legend.text = element_text( size = 12),
+             legend.position = c(.81, .7),
+           legend.background = element_rect( fill = "linen"),
+          panel.grid.major.y = element_blank(),
+                axis.title.x = element_blank(),
+                axis.title.y = element_blank(),
+                 axis.text.x = element_blank(),
+                 axis.text.y = element_blank(),
+                 axis.line.x = element_blank(),
+                 axis.line.y = element_blank(),
+                axis.ticks.x = element_blank(),
+                axis.ticks.y = element_blank())
 ```
 
 ### Rats and Empty Homes
@@ -689,5 +703,5 @@ maps +
 <hr class="divider"/>
 <p class="text-center"><a href="https://github.com/heguanelvis/Chicago-Rats-Be-Gone">Chicago Rats Be Gone</a></p>
 <p class="text-center">Created by <a href="https://github.com/heguanelvis">Guan He</a></p>
-<p class="text-center"><span><em>guanh@uchicago.edu</em></span></p>
+<p class="text-center"><span>guanh@uchicago.edu</span></p>
 <p class="text-center"><a href="https://github.com/heguanelvis"><i class="fab fa-github-square"></i></a></p>
