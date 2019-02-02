@@ -335,7 +335,7 @@ p1 <- city_months_18 %>%
   theme(     
              plot.title = element_text(hjust = 0.47),
           plot.subtitle = element_text(hjust = 0.47),
-            legend.text = element_text(size = 13),
+            legend.text = element_text( size = 13),
             axis.line.y = element_blank(),
       legend.background = element_rect(),
         legend.position = "top",
@@ -353,7 +353,7 @@ grid.draw(p1)
 ```
 
 ### Distribution of Sanitation Code Violations and Rat Complaints
-Although rat complaint distribution is not equivalent of the actual rat distribution, Chicago Lincoln Park Zoo has recently conducted <a href="https://www.frontiersin.org/articles/10.3389/fevo.2018.00189/full" target="_blank" class="research_link">research</a> indicating that it can be highly reflective of rodent infestation situation. The research also shows that the abundance of rats is potentially related to the abundance of garbage and other types of sanitation problems. That begs the question where rats and garbage are complained frequently and how much they overlap in different areas of Chicago. As is shown in the map below, we can see that garbage and rats are connected.
+Although rat complaint distribution is not equivalent of the actual rat distribution, Chicago Lincoln Park Zoo has recently conducted <a href="https://www.frontiersin.org/articles/10.3389/fevo.2018.00189/full" target="_blank" class="research_link">research</a> indicating that it can be highly reflective of rodent infestation situation. The research also shows that the abundance of rats is potentially related to the abundance of garbage and other types of sanitation problems. That begs the question where rats and garbage are complained frequently and how much they overlap in different areas of Chicago. As is shown in the map below, we can see that sanitation code violations and rat complaints are connected.
 ```{r error=FALSE, fig.height=8.4, fig.width=9, message=FALSE, warning=FALSE}
 # Data Processing for Plot 
 GOOGLE_TOKEN = read_delim(here("data", "GoogleAuth.txt"),
@@ -414,7 +414,7 @@ ggmap(chicago) +
                 legend.title = element_text( size = 13, 
                                              face = "bold"),
                  legend.text = element_text( size = 12),
-             legend.position = c(.81, .7),
+             legend.position = c(.8, .7),
            legend.background = element_rect( fill = "linen"),
           panel.grid.major.y = element_blank(),
                 axis.title.x = element_blank(),
@@ -431,60 +431,55 @@ ggmap(chicago) +
 Rats, being the ultimate squatters, see vacant houses as their prime real estate. Such places offer hassle-free shelter; nooks and crannies for hiding and playing; carpeting for nests; and toilet bowls for swimming. The best houses for rodents are those that have been vacant for a while or haven’t yet been fixed up, as these often provide a convenient water supply via leaks or other accumulated moisture. Vacant Properties that are foreclosed generally entail high risks, and once a single unit has been infested, it is only a matter of time before rats venture out into the neighborhood in search of food and new places to inhabit. The plot below shows that communities with more vacant properties are more likely to attract rats.
 ```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
 # Data Processing for Plot 
-chicago_rat_community <-
-  chicago_rodents %>%
-  group_by(`Community Area`) %>%
-  summarise(`Number of Complaints` = n()) %>%
-  inner_join(community_numbers, by = c("Community Area" = "Number")) %>%
-  select(Community, `Number of Complaints`)
+property_rat <- 
+  function(data) {
+    chicago_rat_community <-
+      data %>%
+      group_by(`Community Area`) %>%
+      summarise(`Number of Complaints` = n()) %>%
+      inner_join(community_numbers, by = c("Community Area" = "Number")) %>%
+      select(Community, `Number of Complaints`)
 
-chicago_rat_property <-
-  chicago_rat_community %>%
-  inner_join(chicago_vacant_property, by = "Community")
+    chicago_rat_property <-
+      chicago_rat_community %>%
+      inner_join(chicago_vacant_property, by = "Community")
+    
+    return(chicago_rat_property)
+  }
+
+chicago_rat_property_14 <- property_rat(chicago_rodents_2014)
+chicago_rat_property_15 <- property_rat(chicago_rodents_2015)
+chicago_rat_property_16 <- property_rat(chicago_rodents_2016)
+chicago_rat_property_17 <- property_rat(chicago_rodents_2017)
+chicago_rat_property_18 <- property_rat(chicago_rodents_2018)
+
+chicago_rat_property <- bind_rows(chicago_rat_property_14,
+                                  chicago_rat_property_15,
+                                  chicago_rat_property_16,
+                                  chicago_rat_property_17,
+                                  chicago_rat_property_18)
 
 # Plot 
 chicago_rat_property %>%
   ggplot(aes(x = `Vacant Housing Units`,
              y = `Number of Complaints`)) +
-  geom_boxplot(aes(group = cut_width(`Vacant Housing Units`, 
-                                        width = 480,
-                                     boundary = 0),
-                    fill = cut_width(`Vacant Housing Units`, 
-                                        width = 480,
-                                     boundary = 0)),
-                   color = "black") +
-  labs(title = "Communities with More Vacant Properties Are More Likely to\nSee Rodent Complaints in Chicago (2014 to 2018)             ",
+  geom_hex() +
+  xlim(0, 3850) +
+  labs(
+       title = "Communities with More Vacant Properties Are More Likely to\nSee Rodent Complaints in Chicago (2014 to 2018)",
     subtitle = "Perfect insulation in the walls for nesting may be what is attracting rodents",
      caption = "Source: American Community Survey & Chicago Data Portal",
-           x = "Number of Vacant Housing Units") +
-  xlim(0, 3850) +
-  scale_fill_manual(
-    "Groups of Communities\nwith Different Numbers\nof Vacant Housing Units",
-    values = c("springgreen4",
-               "springgreen3",
-                "goldenrod1",
-                "goldenrod3",
-                "darkorange",
-                "orangered",
-                "firebrick1",
-                "firebrick"),
-    labels = c("[0, 480]",
-               "[480, 960)",
-               "[960, 1440)",
-               "[1440, 1920)",
-               "[1920, 2400)",
-               "[2400, 2880)",
-               "[2880, 3360)",
-               "[3360, 3840)")
-    ) +
+           x = "Number of Vacant Housing Units"
+  ) +
+  scale_fill_continuous("Community\nCount", 
+                         low = "orange", 
+                        high = "firebrick") +
   custom_theme +
-  theme(plot.title = element_text(hjust = 1.8),
-     plot.subtitle = element_text(hjust = 1.4),
-      plot.caption = element_text(hjust = 1.79),
-       legend.text = element_text( size = 12),
-      legend.title = element_text( size = 13, 
-                                   face = "bold"),
-       axis.line.y = element_blank())
+  theme(
+    plot.subtitle = element_text(hjust = 0.5),
+     plot.caption = element_text(hjust = 1.29),
+      axis.line.y = element_blank()
+  )
 ```
 
 ### How Has Response Time Changed Over Years?
@@ -528,7 +523,7 @@ chicago_rodents %>%
   custom_theme +
   theme(plot.title = element_text(hjust = 0.55),
      plot.subtitle = element_text(hjust = 0.55),
-      plot.caption = element_text(hjust = 1.26),
+      plot.caption = element_text(hjust = 1.27),
        legend.text = element_text( size = 10),
       legend.title = element_text( size = 12, 
                                    face = "bold"),
