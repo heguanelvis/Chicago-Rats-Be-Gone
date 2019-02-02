@@ -35,6 +35,8 @@ library(ggmap)
 library(sf)
 library(cowplot)
 library(ggplotify)
+library(ggplot2)
+library(treemapify)
 ```
 
 ## Emerging Rat Concerns...
@@ -485,6 +487,99 @@ ggmap(chicago) +
                  axis.line.y = element_blank(),
                 axis.ticks.x = element_blank(),
                 axis.ticks.y = element_blank())
+```
+
+### Surrounding Premises Where Rat Complaints Are Filed
+From the map above, we can see that rat complaints are generally distributed near sanitation code violations. If we take a further look at the premises where rat complaints are filed, we can see that most complaints are from premises associated with unhandled garbage from 2014 to 2018. Indeed, acting as potential food source, garbage is most appealing to rodents. It is important for the city government to make sure all properties empty garbage at a timely manner.
+```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+premise_indicators1 <- 
+  chicago_rodents %>%
+  filter(`Number of Premises Baited` > 0,
+         `Number of Premises with Garbage` > 0,
+         `Number of Premises with Rats` > 0) %>%
+  mutate(`Surrounding Premises with Indicators` = "Traps, Garbage & Rats")
+
+premise_indicators2 <- 
+  chicago_rodents %>%
+  filter(`Number of Premises Baited` > 0,
+         `Number of Premises with Garbage` > 0,
+         `Number of Premises with Rats` == 0) %>%
+  mutate(`Surrounding Premises with Indicators` = "Traps & Garbage")
+
+premise_indicators3 <- 
+  chicago_rodents %>%
+  filter(`Number of Premises Baited` == 0,
+         `Number of Premises with Garbage` > 0,
+         `Number of Premises with Rats` > 0) %>%
+  mutate(`Surrounding Premises with Indicators` = "Garbage & Rats")
+
+premise_indicators4 <- 
+  chicago_rodents %>%
+  filter(`Number of Premises Baited` > 0,
+         `Number of Premises with Garbage` == 0,
+         `Number of Premises with Rats` > 0) %>%
+  mutate(`Surrounding Premises with Indicators` = "Traps & Garbage")
+
+premise_indicators5 <- 
+  chicago_rodents %>%
+  filter(`Number of Premises Baited` > 0,
+         `Number of Premises with Garbage` == 0,
+         `Number of Premises with Rats` == 0) %>%
+    mutate(`Surrounding Premises with Indicators` = "Only\nTraps")
+
+premise_indicators6 <- 
+  chicago_rodents %>%
+  filter(`Number of Premises Baited` == 0,
+         `Number of Premises with Garbage` > 0,
+         `Number of Premises with Rats` == 0) %>%
+  mutate(`Surrounding Premises with Indicators` = "Only Garbage")
+
+premise_indicators7 <- 
+  chicago_rodents %>%
+  filter(`Number of Premises Baited` == 0,
+         `Number of Premises with Garbage` == 0,
+         `Number of Premises with Rats` > 0) %>%
+  mutate(`Surrounding Premises with Indicators` = "Only\nRats")
+
+premise_indicators8 <- 
+  chicago_rodents %>%
+  filter(`Number of Premises Baited` == 0,
+         `Number of Premises with Garbage` == 0,
+         `Number of Premises with Rats` == 0) %>%
+  mutate(`Surrounding Premises with Indicators` = "None")
+
+premise_indicators <- 
+  bind_rows(premise_indicators1,
+            premise_indicators2,
+            premise_indicators3,
+            premise_indicators4,
+            premise_indicators5,
+            premise_indicators6,
+            premise_indicators7,
+            premise_indicators8)
+
+premise_indicators %>%
+  group_by(`Surrounding Premises with Indicators`) %>%
+  summarise(Count = n()) %>%
+  ggplot() +
+  geom_treemap(aes(area = Count,
+                  label = `Surrounding Premises with Indicators`,
+                   fill = Count),
+                  color = "linen") +
+  geom_treemap_text(aes(area = Count,
+                       label = `Surrounding Premises with Indicators`,
+                        fill = Count),
+                       color = "linen",
+                       place = "center") +
+  scale_fill_continuous(low = "orange", high = "firebrick") +
+  labs(
+          title = "Most Rat Complaints Are Filed at Baited Premises with Garbage and Rats (2014 to 2018)",
+       subtitle = "Premises with garbage seem to be more related with rat complaints in Chicago",
+        caption = "Source: Chicago Data Portal"
+       ) +
+  custom_theme +
+  theme(legend.position = "none",
+          plot.subtitle = element_text(hjust = 0.5))
 ```
 
 ### Rats and Empty Homes
