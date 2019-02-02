@@ -342,7 +342,12 @@ p1 <- city_months_18 %>%
       legend.background = element_rect(),
         legend.position = "top",
         legend.box.just = "top",
-   legend.justification = "center"
+   legend.justification = "center",
+            plot.margin = margin(t = 30,
+                                 r = 45, 
+                                 l = 30, 
+                                 b = 30,
+                              unit = "pt")
      ) +
   guides(color = guide_legend(title = NULL)) +
   custom_tt_color("Chicago Has the Most Rat Complaints per 10000 Population All Year Round", "black", 1.3, 25.7) +
@@ -497,7 +502,7 @@ premise_indicators1 <-
   filter(`Number of Premises Baited` > 0,
          `Number of Premises with Garbage` > 0,
          `Number of Premises with Rats` > 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Traps, Garbage & Rats")
+  mutate(`Surrounding Premises with Indicators` = "Premises with\nTraps, Garbage & Rats")
 
 premise_indicators2 <- 
   chicago_rodents %>%
@@ -579,7 +584,12 @@ premise_indicators %>%
        ) +
   custom_theme +
   theme(legend.position = "none",
-          plot.subtitle = element_text(hjust = 0.5))
+          plot.subtitle = element_text(hjust = 0.5),
+            plot.margin = margin(t = 30,
+                                 r = 50, 
+                                 l = 50, 
+                                 b = 30,
+                              unit = "pt"))
 ```
 
 ### Rats and Empty Homes
