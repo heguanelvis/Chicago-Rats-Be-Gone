@@ -352,6 +352,66 @@ grid.newpage()
 grid.draw(p1)
 ```
 
+### When Do We See Most Rat Complaints?
+Many homeowners seem to have the misconception that rats will only invade their houses in winter since it is when temperatures at home differ significantly from the outside. However, in Chicago, we can see from the heatmap that rat complaints are most frequent in the summer, indicating that rat activities are potentially most rampant at that time. Summer is when temperatures are most moderate for rodents to move around and for smell of food to spread. The high level of human activities results in greater amount of trash that appeals to rats.
+```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+chicago_rodents_year <-
+  chicago_rodents %>%
+  mutate(Year = year(mdy(`Creation Date`))) %>%
+  group_by(Year) %>%
+  summarise(year_count = n())
+
+chicago_rodents_mon <-
+  chicago_rodents %>%
+  mutate(Year = year(mdy(`Creation Date`)),
+        Month = month(mdy(`Creation Date`),
+                      label = TRUE, 
+                       abbr = TRUE)) %>%
+  group_by(Year, Month) %>%
+  summarise(month_count = n())
+
+chicago_rodents_year_mon <-
+  chicago_rodents_year %>%
+  inner_join(chicago_rodents_mon, by = "Year") %>%
+  mutate(`Percent of Annual Complaints\nEach Month Accounts for` =
+           month_count / year_count)
+
+chicago_rodents_year_mon %>%
+  ggplot(aes(x = Month,
+             y = Year)) +
+  geom_tile(aes(
+    fill = `Percent of Annual Complaints\nEach Month Accounts for`
+    ),
+   color = "linen") +
+  labs(title = "Rat Complaints Are Most Frequent during Summer in Chicago (2014 to 2018)",
+    subtitle = "Rats may multiply due to warm weathers and abundance\nof food created by more human activities in summer",
+     caption = "Source: Chicago Data Portal") +
+  scale_fill_continuous(low = "#ffb380", 
+                       high = "#b30000", 
+                     labels = scales::percent) +
+  custom_theme +
+  theme(
+               axis.ticks.x = element_blank(),
+                axis.line.x = element_blank(),
+               axis.ticks.y = element_blank(),
+                axis.line.y = element_blank(),
+            legend.position = "top",
+           legend.key.width = unit(2.5, "cm"),
+       legend.justification = "center",
+               legend.title = element_text( size = 13, 
+                                           face = "bold"),
+         panel.grid.major.y = element_blank(),
+                legend.text = element_text( size = 11),
+                 plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5),
+                plot.margin = margin(t = 30,
+                                     r = 45, 
+                                     l = 30, 
+                                     b = 30,
+                                  unit = "pt")
+  )
+```
+
 ### Distribution of Sanitation Code Violations and Rat Complaints
 Although rat complaint distribution is not equivalent of the actual rat distribution, Chicago Lincoln Park Zoo has recently conducted <a href="https://www.frontiersin.org/articles/10.3389/fevo.2018.00189/full" target="_blank" class="research_link">research</a> indicating that it can be highly reflective of rodent infestation situation. The research also shows that the abundance of rats is potentially related to the abundance of garbage and other types of sanitation problems. That begs the question where rats and garbage are complained frequently and how much they overlap in different areas of Chicago. As is shown in the map below, we can see that sanitation code violations and rat complaints are connected.
 ```{r error=FALSE, fig.height=8.4, fig.width=9, message=FALSE, warning=FALSE}
@@ -463,7 +523,7 @@ chicago_rat_property <- bind_rows(chicago_rat_property_14,
 chicago_rat_property %>%
   ggplot(aes(x = `Vacant Housing Units`,
              y = `Number of Complaints`)) +
-  geom_hex() +
+  geom_hex(color = "linen") +
   xlim(0, 3850) +
   labs(
        title = "Communities with More Vacant Properties Are More Likely to\nSee Rodent Complaints in Chicago (2014 to 2018)",
