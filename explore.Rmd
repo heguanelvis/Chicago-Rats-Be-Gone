@@ -201,18 +201,23 @@ chicago_rat_community_17 %<>%
          )
 
 # Plot Custom Theme
+textcolor <- "#1f2226"
+bgcolor <- "linen"
 custom_theme <-
   theme(
           plot.title = element_text(size = 31,
                                     face = "bold",
                                   family = "monda",
-                              lineheight = 0.5),
+                              lineheight = 0.5,
+                                   color = textcolor),
        plot.subtitle = element_text(size = 29,
                                   family = "monda",
-                              lineheight = 0.5),
+                              lineheight = 0.5,
+                                   color = textcolor),
         plot.caption = element_text(size = 23,
                                   family = "monda",
-                              lineheight = 0.5),
+                              lineheight = 0.5,
+                                   color = textcolor),
          plot.margin =          margin(t = 30, 
                                        r = 30, 
                                        b = 30, 
@@ -221,16 +226,18 @@ custom_theme <-
           axis.title = element_text(size = 25,
                                     face = "bold",
                                   family = "monda",
-                              lineheight = 0.5),
+                              lineheight = 0.5,
+                                   color = textcolor),
            axis.text = element_text(size = 24,
                                     face = "bold",
                                   family = "monda",
-                              lineheight = 0.5),
+                              lineheight = 0.5, 
+                                   color = textcolor),
          axis.line.x = element_line(
-                                   color = "black",
+                                   color = textcolor,
                                     size = 0.7
                                    ), 
-   legend.background = element_rect(fill = "linen"),
+   legend.background = element_rect(fill = bgcolor),
         legend.title = element_text(
                                   family = "monda"
                                   ), 
@@ -241,13 +248,13 @@ custom_theme <-
                                    color = NA),
   panel.grid.major.x = element_blank(),
   panel.grid.major.y = element_line(size = 0.6, 
-                                   color = "black",
+                                   color = textcolor,
                                 linetype = "dotted"),
   panel.grid.minor.x = element_blank(),
   panel.grid.minor.y = element_blank(),
         panel.border = element_blank(),
-    panel.background = element_rect(fill = "linen"),
-     plot.background = element_rect(fill = "linen")
+    panel.background = element_rect(fill = bgcolor),
+     plot.background = element_rect(fill = bgcolor)
   )
 ```
 
@@ -341,7 +348,7 @@ p1 <- city_months_18 %>%
   geom_hline(
       yintercept = 0, 
             size = 0.6,
-           color = "black",
+           color = textcolor,
         linetype = "dotted"
       ) +
   labs(
@@ -376,7 +383,7 @@ p1 <- city_months_18 %>%
                               unit = "pt")
      ) +
   guides(color = guide_legend(title = NULL)) +
-  custom_tt_color("Chicago Has the Most Rat Complaints per 10000 Population All Year Round", "black", 1.3, 25.65) +
+  custom_tt_color("Has the Most Rat Complaints per 10000 Population All Year Round", textcolor, 2.45, 25.65) +
   custom_tt_color("Chicago", "#e11f27", 1.3, 25.65)
 
 p1 <- ggplot_gtable(ggplot_build(p1))
@@ -415,7 +422,7 @@ chicago_rodents_year_mon %>%
   geom_tile(aes(
     fill = `Percent of Annual Complaints\nEach Month Accounts for`
     ),
-   color = "linen") +
+   color = bgcolor) +
   labs(title = "Rat Complaints Are Most Frequent during Summer in Chicago (2014 to 2018)",
     subtitle = "Rats may multiply due to warm weathers and abundance\nof food created by more human activities in summer",
      caption = "Source: Chicago Data Portal") +
@@ -433,10 +440,12 @@ chicago_rodents_year_mon %>%
        legend.justification = "center",
                legend.title = element_text( size = 25, 
                                             face = "bold",
-                                      lineheight = 0.5),
+                                      lineheight = 0.5,
+                                           color = textcolor),
          panel.grid.major.y = element_blank(),
                 legend.text = element_text( size = 24,
-                                      lineheight = 0.5),
+                                      lineheight = 0.5,
+                                           color = textcolor),
                  plot.title = element_text(hjust = 0.5),
               plot.subtitle = element_text(hjust = 0.5),
                 plot.margin = margin(t = 30,
@@ -508,10 +517,12 @@ ggmap(chicago) +
                                    unit = "pt"),
                 legend.title = element_text( size = 25, 
                                              face = "bold",
-                                           family = "monda"),
+                                           family = "monda",
+                                            color = textcolor),
                  legend.text = element_text( size = 22,
                                            family = "monda",
-                                       lineheight = 0.4),
+                                       lineheight = 0.4,
+                                            color = textcolor),
             legend.key.width = unit(0.25, "cm"),
              legend.position = c(.8, .7),
           panel.grid.major.y = element_blank(),
@@ -603,11 +614,11 @@ premise_indicators %>%
   geom_treemap(aes(area = Count,
                   label = `Surrounding Premises with Indicators`,
                    fill = Count),
-                  color = "linen") +
+                  color = bgcolor) +
   geom_treemap_text(aes(area = Count,
                        label = `Surrounding Premises with Indicators`,
                         fill = Count),
-                       color = "linen",
+                       color = bgcolor,
                        place = "center",
                         size = 30,
                       family = "monda",
@@ -665,7 +676,7 @@ chicago_rat_property <- bind_rows(chicago_rat_property_14,
 chicago_rat_property %>%
   ggplot(aes(x = `Vacant Housing Units`,
              y = `Number of Complaints`)) +
-  geom_hex(color = "linen") +
+  geom_hex(color = bgcolor) +
   xlim(0, 3850) +
   labs(
        title = "Communities with More Vacant Properties Are More Likely to\nSee Rodent Complaints in Chicago (2014 to 2018)",
@@ -683,9 +694,11 @@ chicago_rat_property %>%
       axis.line.y = element_blank(),
      legend.title = element_text(size = 25,
                            lineheight = 0.5,
-                                 face = "bold"),
+                                 face = "bold",
+                                color = textcolor),
       legend.text = element_text(size = 24,
-                           lineheight = 0.5)
+                           lineheight = 0.5,
+                                color = textcolor)
   )
 ```
 
@@ -732,14 +745,17 @@ chicago_rodents %>%
      plot.subtitle = element_text(hjust = 0.55),
       plot.caption = element_text(hjust = 1.28),
        legend.text = element_text( size = 20,
-                             lineheight = 0.5),
+                             lineheight = 0.5,
+                                  color = textcolor),
       legend.title = element_text( size = 22, 
                                    face = "bold",
-                             lineheight = 0.5),
+                             lineheight = 0.5,
+                                  color = textcolor),
         strip.text = element_text( face = "bold",
                                    size = 22,
                                  family = "monda",
-                             lineheight = 0.5),
+                             lineheight = 0.5,
+                                  color = textcolor),
        axis.line.y = element_blank(),
   strip.background = element_blank())
 ```
@@ -749,9 +765,9 @@ From 2014 to 2018, Chicago's overall response time to rat complaints have been s
 ```{r error=FALSE, fig.height=10.25, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Data Processing and Mapping Preparation
 cowplot_theme <-
-  theme(panel.background = element_rect(fill = "linen"),
-         plot.background = element_rect(fill = "linen"),
-       legend.background = element_rect(fill = "linen"),
+  theme(panel.background = element_rect(fill = bgcolor),
+         plot.background = element_rect(fill = bgcolor),
+       legend.background = element_rect(fill = bgcolor),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
             panel.border = element_blank())
@@ -854,11 +870,13 @@ map_legend <-
   cowplot_theme +
   theme(legend.text = element_text(size = 24,
                              lineheight = 0.5,
-                                 family = "monda"),
+                                 family = "monda",
+                                  color = textcolor),
        legend.title = element_text(size = 25, 
                                    face = "bold",
                                  family = "monda",
-                             lineheight = 0.5),
+                             lineheight = 0.5,
+                                  color = textcolor),
     legend.position = c(0.1, 0.5)) +
   scale_fill_manual(values = c("#fdae61", # 4
                                "#a6d96a", # 2
@@ -886,10 +904,11 @@ maps <-
             label_size = 25,
             label_fontfamily = "monda",
             label_fontface = "bold",
+            label_colour = textcolor,
             ncol = 3) +
   background_grid(major = "none", minor = "none") +
   cowplot_theme +
-  theme(plot.background = element_rect(color = "linen", size = 2))
+  theme(plot.background = element_rect(color = bgcolor, size = 2))
 
 maps <- as.ggplot(maps)
 maps +
@@ -904,11 +923,11 @@ maps +
                 axis.title.y = element_blank(),
                 axis.text.y  = element_blank(),
                 axis.ticks.y = element_blank(),
-                 axis.line.x = element_line(color = "linen", size = 1),
-                 axis.line.y = element_line(color = "linen", size = 1),
-          axis.line.x.bottom = element_line(color = "linen", size = 1),
-            axis.line.y.left = element_line(color = "linen", size = 1),
-             plot.background = element_rect( fill = "linen"),
+                 axis.line.x = element_line(color = bgcolor, size = 1),
+                 axis.line.y = element_line(color = bgcolor, size = 1),
+          axis.line.x.bottom = element_line(color = bgcolor, size = 1),
+            axis.line.y.left = element_line(color = bgcolor, size = 1),
+             plot.background = element_rect( fill = bgcolor),
                   plot.title = element_text(hjust = 0.5,
                                             vjust = 11.5),
                plot.subtitle = element_text(hjust = 0.5,
