@@ -37,6 +37,11 @@ library(cowplot)
 library(ggplotify)
 library(ggplot2)
 library(treemapify)
+library(showtext)
+
+# Font Setup
+font_add_google("Monda", "monda")
+showtext_auto()
 ```
 
 ## Emerging Rat Concerns...
@@ -198,24 +203,40 @@ chicago_rat_community_17 %<>%
 # Plot Custom Theme
 custom_theme <-
   theme(
-          plot.title = element_text(size = 16,
-                                    face = "bold"),
-       plot.subtitle = element_text(size = 14),
-        plot.caption = element_text(size = 10),
+          plot.title = element_text(size = 31,
+                                    face = "bold",
+                                  family = "monda",
+                              lineheight = 0.5),
+       plot.subtitle = element_text(size = 29,
+                                  family = "monda",
+                              lineheight = 0.5),
+        plot.caption = element_text(size = 23,
+                                  family = "monda",
+                              lineheight = 0.5),
          plot.margin =          margin(t = 30, 
                                        r = 30, 
                                        b = 30, 
                                        l = 30, 
                                     unit = "pt"),
-          axis.title = element_text(size = 13,
-                                    face = "bold"),
-           axis.text = element_text(size = 12,
-                                    face = "bold"),
+          axis.title = element_text(size = 25,
+                                    face = "bold",
+                                  family = "monda",
+                              lineheight = 0.5),
+           axis.text = element_text(size = 24,
+                                    face = "bold",
+                                  family = "monda",
+                              lineheight = 0.5),
          axis.line.x = element_line(
                                    color = "black",
                                     size = 0.7
                                    ), 
    legend.background = element_rect(fill = "linen"),
+        legend.title = element_text(
+                                  family = "monda"
+                                  ), 
+         legend.text = element_text(
+                                  family = "monda"
+        ),
           legend.key = element_rect(fill = NA, 
                                    color = NA),
   panel.grid.major.x = element_blank(),
@@ -232,7 +253,7 @@ custom_theme <-
 
 ### "Rat Capital" of United States?
 In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles, and cities that were historically troubled by rodent infestations such as Detroit, Chicago not only has the highest total complaint count, but appeared to have the largest number of complaints per 10000 population all year round. From the graph below, we can also see that rat problems were especially prevalent in the summer.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Data Processing for Plot
 city_mon_summary <- 
   function(df, date_col, population, city_name) {
@@ -300,8 +321,9 @@ custom_tt_color <-
       grob = textGrob(label = text, 
                       hjust = 0, 
                          gp = gpar(col = color, 
-                              fontsize = 16,
-                              fontface = "bold")),
+                              fontsize = 31,
+                            fontfamily = "monda",
+                              fontface = 2)),
       xmin = x, xmax = x,
       ymin = y, ymax = y
     )   
@@ -335,9 +357,13 @@ p1 <- city_months_18 %>%
                                 "#763f02")) + # brown
   custom_theme +
   theme(     
-             plot.title = element_text(hjust = 0.47),
+             plot.title = element_text(hjust = 0.47,
+                                        face = "bold",
+                                      family = "monda",
+                                  lineheight = 0.5),
           plot.subtitle = element_text(hjust = 0.47),
-            legend.text = element_text( size = 13),
+            legend.text = element_text( size = 27,
+                                  lineheight = 1),
             axis.line.y = element_blank(),
       legend.background = element_rect(),
         legend.position = "top",
@@ -350,8 +376,8 @@ p1 <- city_months_18 %>%
                               unit = "pt")
      ) +
   guides(color = guide_legend(title = NULL)) +
-  custom_tt_color("Chicago Has the Most Rat Complaints per 10000 Population All Year Round", "black", 1.3, 25.7) +
-  custom_tt_color("Chicago", "#e11f27", 1.3, 25.7)
+  custom_tt_color("Chicago Has the Most Rat Complaints per 10000 Population All Year Round", "black", 1.3, 25.65) +
+  custom_tt_color("Chicago", "#e11f27", 1.3, 25.65)
 
 p1 <- ggplot_gtable(ggplot_build(p1))
 p1$layout$clip[p1$layout$name == "panel"] <- "off"
@@ -361,7 +387,7 @@ grid.draw(p1)
 
 ### When Do We See Most Rat Complaints?
 Many homeowners seem to have the misconception that rats will only invade their houses in winter since it is when temperatures at home differ significantly from the outside. However, in Chicago, we can see from the heatmap that rat complaints are most frequent in the summer, indicating that rat activities are potentially most rampant at that time. Summer is when temperatures are most moderate for rodents to move around and for smell of food to spread. The high level of human activities results in greater amount of trash that appeals to rats.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 chicago_rodents_year <-
   chicago_rodents %>%
   mutate(Year = year(mdy(`Creation Date`))) %>%
@@ -405,10 +431,12 @@ chicago_rodents_year_mon %>%
             legend.position = "top",
            legend.key.width = unit(2.5, "cm"),
        legend.justification = "center",
-               legend.title = element_text( size = 13, 
-                                           face = "bold"),
+               legend.title = element_text( size = 25, 
+                                            face = "bold",
+                                      lineheight = 0.5),
          panel.grid.major.y = element_blank(),
-                legend.text = element_text( size = 11),
+                legend.text = element_text( size = 24,
+                                      lineheight = 0.5),
                  plot.title = element_text(hjust = 0.5),
               plot.subtitle = element_text(hjust = 0.5),
                 plot.margin = margin(t = 30,
@@ -421,7 +449,7 @@ chicago_rodents_year_mon %>%
 
 ### Distribution of Sanitation Code Violations and Rat Complaints
 Although rat complaint distribution is not equivalent of the actual rat distribution, Chicago Lincoln Park Zoo has recently conducted <a href="https://www.frontiersin.org/articles/10.3389/fevo.2018.00189/full" target="_blank" class="research_link">research</a> indicating that it can be highly reflective of rodent infestation situation. The research also shows that the abundance of rats is potentially related to the abundance of garbage and other types of sanitation problems. That begs the question where rats and garbage are complained frequently and how much they overlap in different areas of Chicago. As is shown in the map below, we can see that sanitation code violations and rat complaints are connected.
-```{r error=FALSE, fig.height=8.4, fig.width=9, message=FALSE, warning=FALSE}
+```{r error=FALSE, fig.height=9.95, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Data Processing for Plot 
 GOOGLE_TOKEN = read_delim(here("data", "GoogleAuth.txt"),
                         delim = "/", 
@@ -474,15 +502,18 @@ ggmap(chicago) +
                   plot.title = element_text(hjust = 0.6),
                plot.subtitle = element_text(hjust = 0.6),
                  plot.margin = margin(t = 30,
-                                      r = 42, 
+                                      r = 45, 
                                       l = 0, 
                                       b = 30,
                                    unit = "pt"),
-                legend.title = element_text( size = 13, 
-                                             face = "bold"),
-                 legend.text = element_text( size = 12),
+                legend.title = element_text( size = 25, 
+                                             face = "bold",
+                                           family = "monda"),
+                 legend.text = element_text( size = 22,
+                                           family = "monda",
+                                       lineheight = 0.4),
+            legend.key.width = unit(0.25, "cm"),
              legend.position = c(.8, .7),
-           legend.background = element_rect( fill = "linen"),
           panel.grid.major.y = element_blank(),
                 axis.title.x = element_blank(),
                 axis.title.y = element_blank(),
@@ -491,12 +522,14 @@ ggmap(chicago) +
                  axis.line.x = element_blank(),
                  axis.line.y = element_blank(),
                 axis.ticks.x = element_blank(),
-                axis.ticks.y = element_blank())
+                axis.ticks.y = element_blank()) +
+  guides(color = guide_legend(keyheight = 2,
+                            title.vjust = -2.5))
 ```
 
 ### Surrounding Premises Where Rat Complaints Are Filed
 From the map above, we can see that rat complaints are generally distributed near sanitation code violations. If we take a further look at the premises where rat complaints are filed, we can see that most complaints are from premises associated with unhandled garbage from 2014 to 2018. Indeed, acting as potential food source, garbage is most appealing to rodents. It is important for the city government to make sure all properties empty garbage at a timely manner.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 premise_indicators1 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` > 0,
@@ -575,8 +608,12 @@ premise_indicators %>%
                        label = `Surrounding Premises with Indicators`,
                         fill = Count),
                        color = "linen",
-                       place = "center") +
-  scale_fill_continuous(low = "orange", high = "firebrick") +
+                       place = "center",
+                        size = 30,
+                      family = "monda",
+                  lineheight = 0.5) +
+  scale_fill_continuous( low = "orange", 
+                        high = "firebrick") +
   labs(
           title = "Most Rat Complaints Are Filed at Baited Premises with Garbage and Rats (2014 to 2018)",
        subtitle = "Premises with garbage seem to be more related with rat complaints in Chicago",
@@ -594,7 +631,7 @@ premise_indicators %>%
 
 ### Rats and Empty Homes
 Rats, being the ultimate squatters, see vacant houses as their prime real estate. Such places offer hassle-free shelter; nooks and crannies for hiding and playing; carpeting for nests; and toilet bowls for swimming. The best houses for rodents are those that have been vacant for a while or haven’t yet been fixed up, as these often provide a convenient water supply via leaks or other accumulated moisture. Vacant Properties that are foreclosed generally entail high risks, and once a single unit has been infested, it is only a matter of time before rats venture out into the neighborhood in search of food and new places to inhabit. The plot below shows that communities with more vacant properties are more likely to attract rats.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Data Processing for Plot 
 property_rat <- 
   function(data) {
@@ -642,14 +679,19 @@ chicago_rat_property %>%
   custom_theme +
   theme(
     plot.subtitle = element_text(hjust = 0.5),
-     plot.caption = element_text(hjust = 1.29),
-      axis.line.y = element_blank()
+     plot.caption = element_text(hjust = 1.37),
+      axis.line.y = element_blank(),
+     legend.title = element_text(size = 25,
+                           lineheight = 0.5,
+                                 face = "bold"),
+      legend.text = element_text(size = 24,
+                           lineheight = 0.5)
   )
 ```
 
 ### How Has Response Time Changed Over Years?
 The city has become increasingly responsive to rat complaints. In 2016, the mayor's absolute goal for city workers was to respond to all relevant complaints within 5 days, and now it seems that this goal is largely achieved. The bar chart below shows how days to resolve complaints have been decreasing throughout different months of years. Starting from 2016, response time has dropped drastically and the number of total rat complaints has also started to go down.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE}
+```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Plot 
 chicago_rodents %>%
   filter(Status == "Completed") %>%
@@ -688,19 +730,23 @@ chicago_rodents %>%
   custom_theme +
   theme(plot.title = element_text(hjust = 0.55),
      plot.subtitle = element_text(hjust = 0.55),
-      plot.caption = element_text(hjust = 1.27),
-       legend.text = element_text( size = 10),
-      legend.title = element_text( size = 12, 
-                                   face = "bold"),
+      plot.caption = element_text(hjust = 1.28),
+       legend.text = element_text( size = 20,
+                             lineheight = 0.5),
+      legend.title = element_text( size = 22, 
+                                   face = "bold",
+                             lineheight = 0.5),
         strip.text = element_text( face = "bold",
-                                   size = 12),
+                                   size = 22,
+                                 family = "monda",
+                             lineheight = 0.5),
        axis.line.y = element_blank(),
   strip.background = element_blank())
 ```
 
 ### Response Time Reduced for All Communities
 From 2014 to 2018, Chicago's overall response time to rat complaints have been steadily decreasing for all seasons. Besides seasonality analysis, looking at response time changes at a community level may also help policymakers more effectively target potential rat issues in the future. The map set below shows that the irresponsiveness problem appeared most severe in 2015, especially in the west of Chicago, and shortly after, almost all Chicago communities became much more responsive to rat complaints. 
-```{r error=FALSE, fig.height=10.25, fig.width=11, message=FALSE, warning=FALSE}
+```{r error=FALSE, fig.height=10.25, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Data Processing and Mapping Preparation
 cowplot_theme <-
   theme(panel.background = element_rect(fill = "linen"),
@@ -806,9 +852,12 @@ map_legend <-
   geom_sf(aes(fill = `Days to Resolve Rat Complaints`)) +
   coord_sf(datum = NA) +
   cowplot_theme +
-  theme(legend.text = element_text(size = 13),
-       legend.title = element_text(size = 14, 
-                                  face = "bold")) +
+  theme(legend.text = element_text(size = 24,
+                             lineheight = 0.5),
+       legend.title = element_text(size = 25, 
+                                   face = "bold",
+                             lineheight = 0.5),
+    legend.position = c(0.1, 0.5)) +
   scale_fill_manual(values = c("#fdae61", # 4
                                "#a6d96a", # 2
                                "#ffffbf", # 3
@@ -832,6 +881,9 @@ maps <-
             map_17,
             map_18,
             labels = c("2014", "2015", "2016", " ", "2017", "2018"), 
+            label_size = 25,
+            label_fontfamily = "monda",
+            label_fontface = "bold",
             ncol = 3) +
   background_grid(major = "none", minor = "none") +
   cowplot_theme +
@@ -855,8 +907,10 @@ maps +
           axis.line.x.bottom = element_line(color = "linen", size = 1),
             axis.line.y.left = element_line(color = "linen", size = 1),
              plot.background = element_rect( fill = "linen"),
-                  plot.title = element_text(hjust = 0.5),
-               plot.subtitle = element_text(hjust = 0.5)
+                  plot.title = element_text(hjust = 0.5,
+                                            vjust = 11.5),
+               plot.subtitle = element_text(hjust = 0.5,
+                                            vjust = 10)
     )
 ```
 
