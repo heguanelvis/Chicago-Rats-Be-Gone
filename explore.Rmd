@@ -202,7 +202,18 @@ chicago_rat_community_17 %<>%
 
 # Plot Custom Theme
 textcolor <- "#1f2226"
+
 bgcolor <- "linen"
+
+treemap_color <- c("#2f5769", # darkblue
+                   "#2e94b5", # blue
+                   "#b3a472", # blueorange
+                   "#f8b500", # orange
+                   "#d6231e", # red
+                   "#a86c69", # bluered
+                   "#e97718"  # orangered
+                   )
+
 custom_theme <-
   theme(
           plot.title = element_text(size = 31,
@@ -356,12 +367,12 @@ p1 <- city_months_18 %>%
         subtitle = "Rat complaints per 10000 population by highly affected US cities in 2018",
          caption = "\nSource: City Open Data Portals"
     ) +
-  scale_color_manual(values = c("#02a06e", # green
-                                "#e11f27", # red
-                                "#037dae", # blue
-                                "#fcb11a", # orange
-                                "#543092", # purple
-                                "#763f02")) + # brown
+  scale_color_manual(values = c("#2f5769", # darkblue
+                                "#d6231e", # red
+                                "#a86c69", # bluered
+                                "#f8b500", # orange
+                                "#2e94b5", # blue
+                                "#e97718")) + # orangered
   custom_theme +
   theme(     
              plot.title = element_text(hjust = 0.47,
@@ -384,7 +395,7 @@ p1 <- city_months_18 %>%
      ) +
   guides(color = guide_legend(title = NULL)) +
   custom_tt_color("Has the Most Rat Complaints per 10000 Population All Year Round", textcolor, 2.45, 25.65) +
-  custom_tt_color("Chicago", "#e11f27", 1.3, 25.65)
+  custom_tt_color("Chicago", "#d6231e", 1.3, 25.65)
 
 p1 <- ggplot_gtable(ggplot_build(p1))
 p1$layout$clip[p1$layout$name == "panel"] <- "off"
@@ -426,8 +437,8 @@ chicago_rodents_year_mon %>%
   labs(title = "Rat Complaints Are Most Frequent during Summer in Chicago (2014 to 2018)",
     subtitle = "Rats may multiply due to warm weathers and abundance\nof food created by more human activities in summer",
      caption = "Source: Chicago Data Portal") +
-  scale_fill_continuous(low = "#ffb380", 
-                       high = "#b30000", 
+  scale_fill_continuous(low = "#f8b500",
+                       high = "#d6231e", 
                      labels = scales::percent) +
   custom_theme +
   theme(
@@ -494,7 +505,7 @@ ggmap(chicago) +
                  y = `Latitude`,
              color = `Complaint Type`,
               size = `Complaint Count`),
-             alpha = 0.75,
+             alpha = 0.8,
               data = chicago_geo) +
   labs(title = "Rat Complaints Were Generally Located near\nPlaces with Sanitation Concerns (2018)",
     subtitle = "The north of Chicago has slightly more complaints than the south",
@@ -503,8 +514,8 @@ ggmap(chicago) +
            y = "Latitude") +
   scale_x_continuous(limits = c(-88.13, -87.23), expand = c(0, 0)) +
   scale_y_continuous(limits = c(41.58, 42.1), expand = c(0, 0)) +
-  scale_color_manual(values = c("#e11f27", # red
-                                "#037dae" # blue
+  scale_color_manual(values = c("#d6231e", #red
+                                "#2e94b5" # blue
                                 )) + 
   custom_theme +
   theme(legend.justification = "center",
@@ -613,18 +624,17 @@ premise_indicators %>%
   ggplot() +
   geom_treemap(aes(area = Count,
                   label = `Surrounding Premises with Indicators`,
-                   fill = Count),
+                   fill = factor(Count)),
                   color = bgcolor) +
   geom_treemap_text(aes(area = Count,
                        label = `Surrounding Premises with Indicators`,
-                        fill = Count),
+                        fill = factor(Count)),
                        color = bgcolor,
                        place = "center",
                         size = 30,
                       family = "monda",
                   lineheight = 0.5) +
-  scale_fill_continuous( low = "orange", 
-                        high = "firebrick") +
+  scale_fill_manual(values = treemap_color) +
   labs(
           title = "Most Rat Complaints Are Filed at Baited Premises with Garbage and Rats (2014 to 2018)",
        subtitle = "Premises with garbage seem to be more related with rat complaints in Chicago",
@@ -685,8 +695,8 @@ chicago_rat_property %>%
            x = "Number of Vacant Housing Units"
   ) +
   scale_fill_continuous("Community\nCount", 
-                         low = "orange", 
-                        high = "firebrick") +
+                         low = "#f8b500",
+                        high = "#d6231e") +
   custom_theme +
   theme(
     plot.subtitle = element_text(hjust = 0.5),
@@ -734,12 +744,12 @@ chicago_rodents %>%
      caption = "Source: Chicago Data Portal",
            x = "Month",
            y = "Number of Resolved Complaints") +
-    scale_fill_manual(values = c("#02a06e",  # green
-                                 "#037dae",  # blue
-                                 "#fcb11a",  # orange
-                                 "#763f02",  # brown
-                                 "#e11f27"), # red
-                      "Days to Resolve\nRat Complaints") + 
+    scale_fill_manual(values = c("#2e94b5",  # blue
+                                 "#b3a472",  # blueorange
+                                 "#f8b500",  # orange
+                                 "#e97718",  # orangered
+                                 "#d6231e"), # red
+                      "Days to Resolve\nRat Complaints") +
   custom_theme +
   theme(plot.title = element_text(hjust = 0.55),
      plot.subtitle = element_text(hjust = 0.55),
@@ -810,30 +820,30 @@ create_res_plot <-
       left_join(year_response, by = c("area_num_1" = "Community Area"))
     if(year == 2014) {
       scale_map <- 
-        scale_fill_manual(values = c("#ffffbf", # 3
-                                     "#fdae61", # 4
-                                     "#d7191c"  # 5
+        scale_fill_manual(values = c("#f8b500", # 3
+                                     "#e97718", # 4
+                                     "#d6231e"  # 5
                                      ))
     } else if (year == 2015) {
       scale_map <-
-        scale_fill_manual(values = c("#a6d96a", # 2
-                                     "#fdae61", # 4
-                                     "#d7191c"  # 5
+        scale_fill_manual(values = c("#b3a472", # 2
+                                     "#e97718", # 4
+                                     "#d6231e"  # 5
                                      ))
     } else if (year == 2016) {
       scale_map <-
-        scale_fill_manual(values = c("#a6d96a", # 2
-                                     "#ffffbf"  # 3
+        scale_fill_manual(values = c("#b3a472", # 2
+                                     "#f8b500"  # 3
                                      ))
     } else if (year == 2017) {
       scale_map <- 
-        scale_fill_manual(values = c("#1a9641", # 1
-                                     "#a6d96a"  # 2
+        scale_fill_manual(values = c("#2e94b5", # 1
+                                     "#b3a472"  # 2
                                      ))
     } else if (year == 2018) {
       scale_map <- 
-        scale_fill_manual(values = c("#1a9641", # 1
-                                     "#a6d96a"  # 2
+        scale_fill_manual(values = c("#2e94b5", # 1
+                                     "#b3a472"  # 2
                                      ))
     }
     return (
@@ -878,11 +888,11 @@ map_legend <-
                              lineheight = 0.5,
                                   color = textcolor),
     legend.position = c(0.1, 0.5)) +
-  scale_fill_manual(values = c("#fdae61", # 4
-                               "#a6d96a", # 2
-                               "#ffffbf", # 3
-                               "#d7191c", # 5
-                               "#1a9641"  # 1
+  scale_fill_manual(values = c("#e97718", # 4
+                               "#b3a472", # 2
+                               "#f8b500", # 3
+                               "#d6231e", # 5
+                               "#2e94b5"  # 1
                                ),
                     breaks = c("within 3 days",
                                "4 to 7 days",
