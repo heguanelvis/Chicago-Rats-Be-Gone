@@ -853,9 +853,11 @@ map_legend <-
   coord_sf(datum = NA) +
   cowplot_theme +
   theme(legend.text = element_text(size = 24,
-                             lineheight = 0.5),
+                             lineheight = 0.5,
+                                 family = "monda"),
        legend.title = element_text(size = 25, 
                                    face = "bold",
+                                 family = "monda",
                              lineheight = 0.5),
     legend.position = c(0.1, 0.5)) +
   scale_fill_manual(values = c("#fdae61", # 4

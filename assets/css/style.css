@@ -3,16 +3,23 @@
 font-family: 'Monda', sans-serif;
 */
 
+:root {
+  --color1: #1f2226;
+  --color2: linen;
+  --color-tohover: #f8b500;
+  --color-hovered: #2e94b5;
+}
+
 body {
-    background: rgb(85, 124, 102);
+    background: var(--color1);
     font-family: 'Monda', sans-serif;
-    color: linen;
+    color: var(--color2);
 }
 
 img {
     display: block;
     width: 100%;
-    border: 1px solid linen;
+    border: 1px solid var(--color2);
     border-radius: 4px;
     padding: 4px;
     box-sizing: border-box;
@@ -56,11 +63,15 @@ p {
 
 .divider {
     border-top: none;
-    border-bottom: 2px linen solid;
+    border-bottom: 2px var(--color2) solid;
+}
+
+.btn-default {
+    color: var(--color1);
 }
 
 button {
-    background: linen !important;
+    background: var(--color2) !important;
     font-size: 18px;
     padding: 2px 5px;
 }
@@ -68,46 +79,54 @@ button {
 button:hover,
 button:focus,
 button:active {
-    background: white !important;
+    background: var(--color-tohover) !important;
+    color: var(--color2) !important;
+    outline: none !important;
 }
 
 a {
-    color: #fffb0b !important;
+    color: var(--color-tohover) !important;
 }
 
 a:hover,
 a:active,
 a:focus {
-    color: #a9f9ff !important;
+    color: var(--color-hovered) !important;
     text-decoration: none !important; 
 }
 
+.dropdown-menu,
 a#rmd-show-all-code,
-a#rmd-hide-all-code,
+a#rmd-hide-all-code {
+    background: var(--color2);
+    color: var(--color1) !important;
+}
+
 a#rmd-show-all-code:hover,
 a#rmd-show-all-code:focus,
 a#rmd-show-all-code:active,
 a#rmd-hide-all-code:hover,
 a#rmd-hide-all-code:focus,
 a#rmd-hide-all-code:active {
-    color: black !important;
+    background: var(--color-tohover);
+    color: var(--color2) !important
 }
 
 pre.r {
-    background: linen !important;
+    background: var(--color2) !important;
 }
 
 div.tocify {
-    border: 1px solid linen;
+    border: 1px solid var(--color2);
     border-radius: 4px;
 }
 
 .list-group-item {
-    background: linen !important;
-    color: black !important;
+    background: var(--color2) !important;
+    color: var(--color1) !important;
 }
 
 .list-group-item.active {
-    background: rgb(85, 124, 102) !important;
-    color: linen !important;
+    background: var(--color1) !important;
+    color: var(--color2) !important;
 }
