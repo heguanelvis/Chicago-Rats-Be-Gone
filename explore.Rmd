@@ -945,6 +945,62 @@ maps +
     )
 ```
 
+###
+
+```{r error=FALSE, fig.height=10.25, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
+count14 <- 
+  chicago_rodents_2014 %>%
+  group_by(`Community Area`) %>%
+  summarise(Count14 = n())
+
+count18 <-
+  chicago_rodents_2018 %>%
+  group_by(`Community Area`) %>%
+  summarise(Count18 = n())
+
+count1418 <- 
+  count14 %>%
+  left_join(count18, by = "Community Area") %>%
+  filter(`Community Area` != 0) %>%
+  left_join(community_numbers, by = c("Community Area" = "Number")) %>%
+  mutate(propChange = (Count18 - Count14)/Count14,
+         propBin = cut(propChange,
+                       breaks = c(-Inf, 
+                                  -0.25,
+                                  0, 
+                                  0.25, 
+                                  0.5, 
+                                  0.75, 
+                                  1, 
+                                  Inf),
+                       labels = c("- 25+%",
+                                  "- 0-25%",
+                                  "+ 0-25%",
+                                  "+ 25-50%",
+                                  "+ 50-75%",
+                                  "+ 75-100%",
+                                  "+ 100+%")))
+
+count1418 %>%
+  group_by(`propBin`) %>%
+  mutate(CountProp = n()) %>%
+  ggplot(aes(x = propBin, y = CountProp, fill=`Community`)) +
+  geom_bar(stat = "identity", color = "white", fill = "orange") +
+  geom_text(aes(label = `Community`), 
+             position = position_stack(vjust = 0.5)) +
+  labs(title = "Despite Faster 311 Response Time, Most Chicago Communities Have Seen\nIncrease in Total Rat Complaints (2014 to 2018)",
+    subtitle = "Many communities have seen rat complaints grow by 100% from 2014 to 2018,\nand decrease in total rat complaints are not prominent.",
+           x = "Percentage Change in Rat Complaints from 2014 to 2018",
+     caption = "Source: Chicago Data Portal") +
+  custom_theme +
+  theme(panel.grid.major.y = element_blank(),
+              axis.title.y = element_blank(),
+               axis.text.y = element_blank(),
+               axis.line.y = element_blank(),
+              axis.ticks.y = element_blank(),
+             plot.subtitle = element_text(hjust = 0.5))
+```
+
 <hr class="divider"/>
 <p class="text-center"><a href="https://github.com/heguanelvis/Chicago-Rats-Be-Gone">Chicago Rats Be Gone</a></p>
 <p class="text-center">Created by <a href="https://github.com/heguanelvis">Guan He</a></p>
