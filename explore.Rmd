@@ -984,10 +984,15 @@ count1418 <-
 count1418 %>%
   group_by(`propBin`) %>%
   mutate(CountProp = n()) %>%
-  ggplot(aes(x = propBin, y = CountProp, fill=`Community`)) +
-  geom_bar(stat = "identity", color = "white", fill = "orange") +
-  geom_text(aes(label = `Community`), 
-             position = position_stack(vjust = 0.5)) +
+  ggplot(aes(x = propBin, y = CountProp)) +
+  geom_bar(aes(fill = propBin), 
+               stat = "identity", 
+              color = bgcolor) +
+  geom_text(aes(label = `Community`,
+               family = "monda"), 
+             position = position_stack(vjust = 0.5),
+                 size = 6.96,
+                color = bgcolor) +
   labs(title = "Despite Faster 311 Response Time, Most Chicago Communities Have Seen\nIncrease in Total Rat Complaints (2014 to 2018)",
     subtitle = "Many communities have seen rat complaints grow by 100% from 2014 to 2018,\nand decrease in total rat complaints are not prominent.",
            x = "Percentage Change in Rat Complaints from 2014 to 2018",
@@ -998,7 +1003,16 @@ count1418 %>%
                axis.text.y = element_blank(),
                axis.line.y = element_blank(),
               axis.ticks.y = element_blank(),
-             plot.subtitle = element_text(hjust = 0.5))
+             plot.subtitle = element_text(hjust = 0.5),
+           legend.position = "none") +
+  scale_fill_manual(values = c("#2f5769",  # darkblue
+                               "#2e94b5",  # blue
+                               "#b3a472",  # blueorange
+                               "#f8b500",  # orange
+                               "#e97718",  # orangered
+                               "#a86c69",  # bluered
+                               "#d6231e"), # red 
+                    "")
 ```
 
 <hr class="divider"/>
