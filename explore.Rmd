@@ -947,7 +947,7 @@ maps +
 
 ### Total Number of Rat Complaints Dropped Over Years?
 Although Chicago has increased the complaint response efficiency during the past few years, many of its communities have not effectively reduced the number of rat complaints. There are even some communities that have seen an increase of over 100% of total rat complaints. Certainly, the rats are not gone and also appear to be more rampant in some areas. It is important for the city of Chicago to look into the areas that have gotten worse and reflect on the effectiveness of response methods and strategies.
-```{r error=FALSE, fig.height=10.25, fig.width=12, message=FALSE, warning=FALSE, fig.showtext=TRUE}
+```{r error=FALSE, fig.height=9.9, fig.width=12, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 count14 <- 
   chicago_rodents_2014 %>%
   group_by(`Community Area`) %>%
