@@ -988,7 +988,7 @@ count1418 <-
 
 count1418 %>%
   group_by(`propBin`) %>%
-  mutate(CountProp = n()) %>%
+  mutate(CountProp = 1) %>%
   ggplot(aes(x = propBin, y = CountProp)) +
   geom_bar(aes(fill = propBin), 
                stat = "identity", 
