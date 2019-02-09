@@ -945,9 +945,9 @@ maps +
     )
 ```
 
-###
-
-```{r error=FALSE, fig.height=10.25, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
+### Total Number of Rat Complaints Dropped Over Years?
+Although Chicago has increased the complaint response efficiency during the past few years, many of its communities have not effectively reduced the number of rat complaints. There are even some communities that have seen an increase of over 100% of total rat complaints. Certainly, the rats are not gone and also appear to be more rampant in some areas. It is important for the city of Chicago to look into the areas that have gotten worse and reflect on the effectiveness of response methods and strategies.
+```{r error=FALSE, fig.height=10.25, fig.width=12, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 count14 <- 
   chicago_rodents_2014 %>%
   group_by(`Community Area`) %>%
@@ -979,7 +979,12 @@ count1418 <-
                                   "+ 25-50%",
                                   "+ 50-75%",
                                   "+ 75-100%",
-                                  "+ 100+%")))
+                                  "+ 100+%")),
+         labelcolor = ifelse(propBin %in% c("- 0-25%", 
+                                            "+ 0-25%",
+                                            "+ 25-50%"),
+                             "dark",
+                             "light"))
 
 count1418 %>%
   group_by(`propBin`) %>%
@@ -989,10 +994,11 @@ count1418 %>%
                stat = "identity", 
               color = bgcolor) +
   geom_text(aes(label = `Community`,
-               family = "monda"), 
+               family = "monda",
+                color = labelcolor), 
              position = position_stack(vjust = 0.5),
-                 size = 6.96,
-                color = bgcolor) +
+                 size = 7,
+                 face = "bold") +
   labs(title = "Despite Faster 311 Response Time, Most Chicago Communities Have Seen\nIncrease in Total Rat Complaints (2014 to 2018)",
     subtitle = "Many communities have seen rat complaints grow by 100% from 2014 to 2018,\nand decrease in total rat complaints are not prominent.",
            x = "Percentage Change in Rat Complaints from 2014 to 2018",
@@ -1012,7 +1018,10 @@ count1418 %>%
                                "#e97718",  # orangered
                                "#a86c69",  # bluered
                                "#d6231e"), # red 
-                    "")
+                    "") +
+  scale_color_manual(values = c(textcolor,
+                                bgcolor),
+                     "")
 ```
 
 <hr class="divider"/>
