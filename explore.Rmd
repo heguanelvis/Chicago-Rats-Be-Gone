@@ -964,22 +964,22 @@ count1418 <-
   filter(`Community Area` != 0) %>%
   left_join(community_numbers, by = c("Community Area" = "Number")) %>%
   mutate(propChange = (Count18 - Count14)/Count14,
-         propBin = cut(propChange,
-                       breaks = c(-Inf, 
-                                  -0.25,
-                                  0, 
-                                  0.25, 
-                                  0.5, 
-                                  0.75, 
-                                  1, 
-                                  Inf),
-                       labels = c("- 25+%",
-                                  "- 0-25%",
-                                  "+ 0-25%",
-                                  "+ 25-50%",
-                                  "+ 50-75%",
-                                  "+ 75-100%",
-                                  "+ 100+%")),
+            propBin = cut(propChange,
+                          breaks = c(-Inf, 
+                                     -0.25,
+                                     0, 
+                                     0.25, 
+                                     0.5, 
+                                     0.75, 
+                                     1, 
+                                     Inf),
+                          labels = c("- 25+%",
+                                     "- 0-25%",
+                                     "+ 0-25%",
+                                     "+ 25-50%",
+                                     "+ 50-75%",
+                                     "+ 75-100%",
+                                     "+ 100+%")),
          labelcolor = ifelse(propBin %in% c("- 0-25%", 
                                             "+ 0-25%",
                                             "+ 25-50%"),
@@ -989,10 +989,11 @@ count1418 <-
 count1418 %>%
   group_by(`propBin`) %>%
   mutate(CountProp = 1) %>%
-  ggplot(aes(x = propBin, y = CountProp)) +
-  geom_bar(aes(fill = propBin), 
-               stat = "identity", 
-              color = bgcolor) +
+  ggplot(aes(x = propBin, 
+             y = CountProp)) +
+  geom_bar(aes(  fill = propBin), 
+                 stat = "identity", 
+                color = bgcolor) +
   geom_text(aes(label = `Community`,
                family = "monda",
                 color = labelcolor), 
@@ -1022,6 +1023,141 @@ count1418 %>%
   scale_color_manual(values = c(textcolor,
                                 bgcolor),
                      "")
+```
+
+###
+```{r error=FALSE, fig.height=6.2, fig.width=7.8, message=FALSE, warning=FALSE, fig.showtext=TRUE}
+complaint_community_18 <-
+  chicago_rodents_2018 %>%
+  filter(!is.na(`Community Area`)) %>%
+  mutate(`Community Area` = as.character(`Community Area`)) %>%
+  group_by(`Community Area`) %>%
+  summarise(`2018\nComplaint\nCount` = n())
+
+complaint_community_map <- 
+  chicago_shp %>%
+  left_join(complaint_community_18, 
+            by = c("area_num_1" = "Community Area"))
+
+c1 <- 
+  ggplot(complaint_community_map) +
+  geom_sf(aes(fill = `2018\nComplaint\nCount`)) +
+  coord_sf(  datum = NA) +
+  custom_theme +
+  scale_fill_continuous(low = bgcolor, 
+                       high = "#e97718") +
+  theme(
+         legend.title = element_text(face = "bold",
+                                     size = 16),
+      legend.position = "top",
+     legend.key.width = unit(0.85, "cm"),
+          plot.margin = margin(t = 0, 
+                               r = 0, 
+                               b = 0, 
+                               l = 0, 
+                            unit = "pt")
+  ) + 
+  guides(
+    fill = guide_colorbar(title.position = "top",
+                             title.hjust = 0.5)
+  )
+
+count1418_map <-
+  chicago_shp %>%
+  left_join(count1418 %>%
+              mutate(`Community Area` = as.character(`Community Area`)),
+                  by = c("area_num_1" = "Community Area"))
+
+c2 <-
+  ggplot(count1418_map) +
+  geom_sf(aes(fill = propBin)) +
+  coord_sf(  datum = NA) +
+  custom_theme +
+  scale_fill_manual(values = c('#faf0e6',
+                               '#fbd2c2',
+                               '#f9b4a0',
+                               '#f4947e',
+                               '#ec745d',
+                               '#e2513d',
+                               '#d6231e'), 
+                    "Total Complaint Percent\nChange (2014 to 2018)") +
+  theme(
+        legend.title = element_text(face = "bold",
+                                    size = 16),
+    legend.key.width = unit(0.85, "cm"),
+     legend.position = "top",
+         plot.margin = margin(t = 0, 
+                              r = 0, 
+                              b = 0, 
+                              l = 0, 
+                           unit = "pt")
+  ) +
+  guides(
+    fill = guide_legend(title.position = "top",
+                           title.hjust = 0.45,
+                                  nrow = 4)
+  )
+
+income_community <- 
+  community_numbers %>%
+  left_join(Chicago_communities, by = "Community") %>%
+  mutate(`Income\nPer Capita` = `Income Per Capita`)
+
+income_map <-
+  chicago_shp %>%
+  left_join(income_community %>%
+              mutate(Number = as.character(Number)),
+            by = c("area_num_1" = "Number"))
+
+c3 <-
+  ggplot(income_map) +
+  geom_sf(aes(fill = `Income\nPer Capita`)) +
+  coord_sf(  datum = NA) +
+  scale_fill_continuous(low = "#f8b500", 
+                       high = bgcolor) +
+  custom_theme +
+  theme(
+        legend.title = element_text(face = "bold",
+                                    size = 16),
+     legend.position = "top",
+    legend.key.width = unit(1, "cm"),
+         plot.margin = margin(t = 0, 
+                              r = 0, 
+                              b = 0, 
+                              l = 0, 
+                           unit = "pt")
+  ) +
+  guides(
+    fill = guide_colorbar(title.position = "top",
+                             title.hjust = 0.5)
+  )
+comparison <- 
+  plot_grid(c1, c2, c3, ncol = 3)
+
+comparison_gg <- as.ggplot(comparison)
+
+comparison_gg +
+  labs(title = "Richer Communities Have Seen Decrease in Rat Complaints\nWhereas Poorer Communities Have Seen Sharp Increase (2014 to 2018)",
+    subtitle = "Poorer communities with many complaints in the south and\nwest have not seen improvement over the years",
+     caption = "Source: American Community Survey & Chicago Data Portal") +
+  custom_theme +
+  theme(
+              axis.title.x = element_blank(),
+               axis.text.x = element_blank(),
+              axis.ticks.x = element_blank(),
+              axis.title.y = element_blank(),
+              axis.text.y  = element_blank(),
+              axis.ticks.y = element_blank(),
+           plot.background = element_rect( fill = bgcolor),
+                plot.title = element_text( size = 20.5,
+                                          hjust = 0.5,
+                                          vjust = 11.5),
+             plot.subtitle = element_text( size = 19,
+                                          hjust = 0.5,
+                                          vjust = 10),
+              plot.caption = element_text( size = 14, 
+                                          hjust = 1)
+  )
 ```
 
 <hr class="divider"/>
