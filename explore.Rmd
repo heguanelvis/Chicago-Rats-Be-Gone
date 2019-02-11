@@ -1045,12 +1045,12 @@ c1 <-
   coord_sf(  datum = NA) +
   custom_theme +
   scale_fill_continuous(low = bgcolor, 
-                       high = "#e97718") +
+                       high = "#f8b500") +
   theme(
          legend.title = element_text(face = "bold",
                                      size = 16),
       legend.position = "top",
-     legend.key.width = unit(0.85, "cm"),
+     legend.key.width = unit(1, "cm"),
           plot.margin = margin(t = 0, 
                                r = 0, 
                                b = 0, 
@@ -1080,10 +1080,11 @@ c2 <-
                                '#ec745d',
                                '#e2513d',
                                '#d6231e'), 
-                    "Total Complaint Percent\nChange (2014 to 2018)") +
+                    "Complaint Percent Change\n     (2014 to 2018)") +
   theme(
         legend.title = element_text(face = "bold",
                                     size = 16),
+       legend.margin = margin(l = unit(25, "cm")),
     legend.key.width = unit(0.85, "cm"),
      legend.position = "top",
          plot.margin = margin(t = 0, 
@@ -1094,14 +1095,14 @@ c2 <-
   ) +
   guides(
     fill = guide_legend(title.position = "top",
-                           title.hjust = 0.45,
+                           title.hjust = 0.3,
                                   nrow = 4)
   )
 
 income_community <- 
   community_numbers %>%
   left_join(Chicago_communities, by = "Community") %>%
-  mutate(`Income\nPer Capita` = `Income Per Capita`)
+  mutate(`Income\nPer Capita\n(USD)` = `Income Per Capita`)
 
 income_map <-
   chicago_shp %>%
@@ -1111,10 +1112,10 @@ income_map <-
 
 c3 <-
   ggplot(income_map) +
-  geom_sf(aes(fill = `Income\nPer Capita`)) +
+  geom_sf(aes(fill = `Income\nPer Capita\n(USD)`)) +
   coord_sf(  datum = NA) +
-  scale_fill_continuous(low = "#f8b500", 
-                       high = bgcolor) +
+  scale_fill_continuous(low = bgcolor, 
+                       high = "#2e94b5") +
   custom_theme +
   theme(
         legend.title = element_text(face = "bold",
