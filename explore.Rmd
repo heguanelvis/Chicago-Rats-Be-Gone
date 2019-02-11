@@ -1000,7 +1000,7 @@ count1418 %>%
              position = position_stack(vjust = 0.5),
                  size = 7,
                  face = "bold") +
-  labs(title = "Despite Faster 311 Response Time, Most Chicago Communities Have Seen\nIncrease in Total Rat Complaints (2014 to 2018)",
+  labs(title = "Despite Shorter 311 Response Time, Most Chicago Communities Have Seen\nIncrease in Total Rat Complaints (2014 to 2018)",
     subtitle = "Many communities have seen rat complaints grow by 100% from 2014 to 2018,\nand decrease in total rat complaints are not prominent.",
            x = "Percentage Change in Rat Complaints from 2014 to 2018",
      caption = "Source: Chicago Data Portal") +
@@ -1025,7 +1025,8 @@ count1418 %>%
                      "")
 ```
 
-###
+### Income and Rat Complaints
+If we look at the maps of income level and rat complaints in different Chicago communities, we can easily see that most of the areas that have reduced the rat complaints in 2018 are areas in the north and with higher income per capita. However, in the south of Chicago where per capita income is generally lower, many communities have seen increase in rat complaints despite 311 response being faster. It may be a good idea to enhance the quality of 311 response service in lower income areas.
 ```{r error=FALSE, fig.height=6.2, fig.width=7.8, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 complaint_community_18 <-
   chicago_rodents_2018 %>%
