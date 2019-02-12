@@ -1027,12 +1027,13 @@ count1418 %>%
                                "#b3a472",  # blueorange
                                "#f8b500",  # orange
                                "#e97718",  # orangered
-                               "#a86c69",  # bluered
-                               "#d6231e"), # red 
+                               "#d6231e",  # red 
+                               "#7a2d24"), # darkred
                     "") +
   scale_color_manual(values = c(textcolor,
                                 bgcolor),
-                     "")
+                     "") +
+  scale_y_continuous(expand = c(0,0))
 ```
 
 ### Income and Rat Complaints
