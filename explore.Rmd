@@ -435,11 +435,13 @@ chicago_rodents_year_mon %>%
     ),
    color = bgcolor) +
   labs(title = "Rat Complaints Are Most Frequent during Summer in Chicago (2014 to 2018)",
-    subtitle = "Rats may multiply due to warm weathers and abundance\nof food created by more human activities in summer",
+    subtitle = "Rats may multiply or become easier to notice due to warm weathers and abundance\nof food created by more human activities in summer.",
      caption = "Source: Chicago Data Portal") +
   scale_fill_continuous(low = "#f8b500",
                        high = "#d6231e", 
-                     labels = scales::percent) +
+                     limits = c(0, 0.15),
+                     breaks = c(0, 0.05, 0.1, 0.15),
+                     labels = c("0%", "5%", "10%", "15%")) +
   custom_theme +
   theme(
                axis.ticks.x = element_blank(),
@@ -551,7 +553,7 @@ ggmap(chicago) +
 
 ### Surrounding Premises Where Rat Complaints Are Filed
 From the map above, we can see that rat complaints are generally distributed near sanitation code violations. If we take a further look at the premises where rat complaints are filed, we can see that most complaints are from premises associated with unhandled garbage from 2014 to 2018. Indeed, acting as potential food source, garbage is most appealing to rodents. It is important for the city government to make sure all properties empty garbage at a timely manner.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
+```{r error=FALSE, fig.height=9, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 premise_indicators1 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` > 0,
@@ -631,7 +633,15 @@ premise_indicators %>%
                         fill = factor(Count)),
                        color = bgcolor,
                        place = "center",
-                        size = 30,
+                        size = 27,
+                      family = "monda",
+                  lineheight = 0.5) +
+  geom_treemap_text(aes(area = Count,
+                       label = Count,
+                        fill = factor(Count)),
+                       color = bgcolor,
+                       place = "topleft",
+                        size = 27,
                       family = "monda",
                   lineheight = 0.5) +
   scale_fill_manual(values = treemap_color) +
