@@ -1057,7 +1057,8 @@ c1 <-
   coord_sf(  datum = NA) +
   custom_theme +
   scale_fill_continuous(low = bgcolor, 
-                       high = "#f8b500") +
+                       high = "#f8b500",
+                     labels = scales::comma) +
   theme(
          legend.title = element_text(face = "bold",
                                      size = 16),
@@ -1114,7 +1115,7 @@ c2 <-
 income_community <- 
   community_numbers %>%
   left_join(Chicago_communities, by = "Community") %>%
-  mutate(`Income\nPer Capita\n(USD)` = `Income Per Capita`)
+  mutate(`Average\nIncome\nPer Capita` = `Income Per Capita`)
 
 income_map <-
   chicago_shp %>%
@@ -1124,10 +1125,11 @@ income_map <-
 
 c3 <-
   ggplot(income_map) +
-  geom_sf(aes(fill = `Income\nPer Capita\n(USD)`)) +
+  geom_sf(aes(fill = `Average\nIncome\nPer Capita`)) +
   coord_sf(  datum = NA) +
   scale_fill_continuous(low = bgcolor, 
-                       high = "#2e94b5") +
+                       high = "#2e94b5",
+                     labels = scales::comma) +
   custom_theme +
   theme(
         legend.title = element_text(face = "bold",
