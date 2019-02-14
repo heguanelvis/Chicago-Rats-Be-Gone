@@ -210,6 +210,7 @@ treemap_color <- c("#2f5769", # darkblue
                    "#b3a472", # blueorange
                    "#f8b500", # orange
                    "#d6231e", # red
+                   "#7a2d24", # darkred
                    "#a86c69", # bluered
                    "#e97718"  # orangered
                    )
@@ -394,7 +395,7 @@ p1 <- city_months_18 %>%
                               unit = "pt")
      ) +
   guides(color = guide_legend(title = NULL)) +
-  custom_tt_color("Has the Most Rat Complaints per 10000 Population All Year Round", textcolor, 2.45, 25.65) +
+  custom_tt_color("Has the Most Rat Complaints per 10,000 Population All Year Round", textcolor, 2.45, 25.65) +
   custom_tt_color("Chicago", "#d6231e", 1.3, 25.65)
 
 p1 <- ggplot_gtable(ggplot_build(p1))
@@ -553,62 +554,62 @@ ggmap(chicago) +
 
 ### Surrounding Premises Where Rat Complaints Are Filed
 From the map above, we can see that rat complaints are generally distributed near sanitation code violations. If we take a further look at the premises where rat complaints are filed, we can see that most complaints are from premises associated with unhandled garbage from 2014 to 2018. Indeed, acting as potential food source, garbage is most appealing to rodents. It is important for the city government to make sure all properties empty garbage at a timely manner.
-```{r error=FALSE, fig.height=9, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
+```{r error=FALSE, fig.height=10, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 premise_indicators1 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` > 0,
          `Number of Premises with Garbage` > 0,
          `Number of Premises with Rats` > 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Premises with\nTraps, Garbage & Rats")
+  mutate(`Surrounding Premises with Indicators` = "Premises with\nTraps, Garbage & Rats\n126,003")
 
 premise_indicators2 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` > 0,
          `Number of Premises with Garbage` > 0,
          `Number of Premises with Rats` == 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Traps & Garbage")
+  mutate(`Surrounding Premises with Indicators` = "Traps & Garbage\n3,989")
 
 premise_indicators3 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` == 0,
          `Number of Premises with Garbage` > 0,
          `Number of Premises with Rats` > 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Garbage & Rats")
+  mutate(`Surrounding Premises with Indicators` = "Garbage & Rats\n13,766")
 
 premise_indicators4 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` > 0,
          `Number of Premises with Garbage` == 0,
          `Number of Premises with Rats` > 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Traps & Garbage")
+  mutate(`Surrounding Premises with Indicators` = "Traps & Rats\n13,935")
 
 premise_indicators5 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` > 0,
          `Number of Premises with Garbage` == 0,
          `Number of Premises with Rats` == 0) %>%
-    mutate(`Surrounding Premises with Indicators` = "Only\nTraps")
+    mutate(`Surrounding Premises with Indicators` = "Only\nTraps\n2,071")
 
 premise_indicators6 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` == 0,
          `Number of Premises with Garbage` > 0,
          `Number of Premises with Rats` == 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Only Garbage")
+  mutate(`Surrounding Premises with Indicators` = "Only Garbage\n17,601")
 
 premise_indicators7 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` == 0,
          `Number of Premises with Garbage` == 0,
          `Number of Premises with Rats` > 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Only\nRats")
+  mutate(`Surrounding Premises with Indicators` = "Only\nRats\n1,621")
 
 premise_indicators8 <- 
   chicago_rodents %>%
   filter(`Number of Premises Baited` == 0,
          `Number of Premises with Garbage` == 0,
          `Number of Premises with Rats` == 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "None")
+  mutate(`Surrounding Premises with Indicators` = "None\n15,912")
 
 premise_indicators <- 
   bind_rows(premise_indicators1,
@@ -633,14 +634,6 @@ premise_indicators %>%
                         fill = factor(Count)),
                        color = bgcolor,
                        place = "center",
-                        size = 27,
-                      family = "monda",
-                  lineheight = 0.5) +
-  geom_treemap_text(aes(area = Count,
-                       label = Count,
-                        fill = factor(Count)),
-                       color = bgcolor,
-                       place = "topleft",
                         size = 27,
                       family = "monda",
                   lineheight = 0.5) +
@@ -697,7 +690,6 @@ chicago_rat_property %>%
   ggplot(aes(x = `Vacant Housing Units`,
              y = `Number of Complaints`)) +
   geom_hex(color = bgcolor) +
-  xlim(0, 3850) +
   labs(
        title = "Communities with More Vacant Properties Are More Likely to\nSee Rodent Complaints in Chicago (2014 to 2018)",
     subtitle = "Perfect insulation in the walls for nesting may be what is attracting rodents",
@@ -705,8 +697,11 @@ chicago_rat_property %>%
            x = "Number of Vacant Housing Units"
   ) +
   scale_fill_continuous("Community\nCount", 
-                         low = "#f8b500",
-                        high = "#d6231e") +
+                        low = "#f8b500",
+                       high = "#d6231e") +
+  scale_x_continuous(labels = scales::comma, 
+                     limits = c(0, 3850)) +
+  scale_y_continuous(labels = scales::comma) +
   custom_theme +
   theme(
     plot.subtitle = element_text(hjust = 0.5),
@@ -724,7 +719,7 @@ chicago_rat_property %>%
 
 ### How Has Response Time Changed Over Years?
 The city has become increasingly responsive to rat complaints. In 2016, the mayor's absolute goal for city workers was to respond to all relevant complaints within 5 days, and now it seems that this goal is largely achieved. The bar chart below shows how days to resolve complaints have been decreasing throughout different months of years. Starting from 2016, response time has dropped drastically and the number of total rat complaints has also started to go down.
-```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
+```{r error=FALSE, fig.height=9, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Plot 
 chicago_rodents %>%
   filter(Status == "Completed") %>%
@@ -760,6 +755,7 @@ chicago_rodents %>%
                                  "#e97718",  # orangered
                                  "#d6231e"), # red
                       "Days to Resolve\nRat Complaints") +
+  scale_y_continuous(labels = scales::comma) +
   custom_theme +
   theme(plot.title = element_text(hjust = 0.55),
      plot.subtitle = element_text(hjust = 0.55),
@@ -909,7 +905,7 @@ map_legend <-
                                "8 to 14 days",
                                "15 to 30 days",
                                "over 30 days")) +
-   background_grid(major = "none", minor = "none")
+   background_grid(major = "none", minor = "none") 
 
 legend <- get_legend(map_legend)
 
