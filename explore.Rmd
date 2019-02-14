@@ -568,7 +568,7 @@ premise_indicators2 <-
   filter(`Number of Premises Baited` > 0,
          `Number of Premises with Garbage` > 0,
          `Number of Premises with Rats` == 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Traps & Garbage\n3,989")
+  mutate(`Surrounding Premises with Indicators` = "Traps &\nGarbage\n3,989")
 
 premise_indicators3 <- 
   chicago_rodents %>%
@@ -603,7 +603,7 @@ premise_indicators7 <-
   filter(`Number of Premises Baited` == 0,
          `Number of Premises with Garbage` == 0,
          `Number of Premises with Rats` > 0) %>%
-  mutate(`Surrounding Premises with Indicators` = "Only\nRats\n1,621")
+  mutate(`Surrounding Premises with Indicators` = "Only Rats\n1,621")
 
 premise_indicators8 <- 
   chicago_rodents %>%
