@@ -438,6 +438,7 @@ chicago_rodents_year_mon %>%
   labs(title = "Rat Complaints Are Most Frequent during Summer in Chicago (2014 to 2018)",
     subtitle = "Rats may multiply or become easier to notice due to warm weathers and abundance\nof food created by more human activities in summer.",
      caption = "Source: Chicago Data Portal") +
+  scale_y_reverse() +
   scale_fill_continuous(low = "#f8b500",
                        high = "#d6231e", 
                      limits = c(0, 0.15),
