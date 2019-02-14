@@ -282,7 +282,7 @@ city_mon_summary <-
                    label = TRUE, 
                     abbr = TRUE)) %>%
       summarise(`Number of Complaints` = n(),
-                `Number of Complaints per 10000 Population` = 
+                `Number of Complaints per 10,000 Population` = 
                   `Number of Complaints` / population * 10000,
                                   City = city_name) %>%
       rename(Month = 1)
@@ -350,7 +350,7 @@ custom_tt_color <-
 
 p1 <- city_months_18 %>%
   ggplot(aes(x = Month, 
-             y = `Number of Complaints per 10000 Population`, 
+             y = `Number of Complaints per 10,000 Population`, 
          group = City,
          color = City)) +
   geom_point() +
@@ -365,7 +365,7 @@ p1 <- city_months_18 %>%
       ) +
   labs(
            title = " ",
-        subtitle = "Rat complaints per 10000 population by highly affected US cities in 2018",
+        subtitle = "Rat complaints per 10,000 population by highly affected US cities in 2018",
          caption = "\nSource: City Open Data Portals"
     ) +
   scale_color_manual(values = c("#2f5769", # darkblue
