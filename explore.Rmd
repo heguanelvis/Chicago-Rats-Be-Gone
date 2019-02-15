@@ -271,7 +271,7 @@ custom_theme <-
 ```
 
 ### "Rat Capital" of United States?
-In 2018, we saw a total of 37577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles, and cities that were historically troubled by rodent infestations such as Detroit, Chicago not only has the highest total complaint count, but appeared to have the largest number of complaints per 10000 population all year round. From the graph below, we can also see that rat problems were especially prevalent in the summer.
+In 2018, we saw a total of 37,577 rat complaints in Chicago. Compared with other major US cities like New York and Los Angeles, and cities that were historically troubled by rodent infestations such as Detroit, Chicago not only had the highest total complaint count, but appeared to have the largest number of complaints per 10,000 population all year round. From the graph below, we can also see that rat complaints were especially prevalent in the summer.
 ```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Data Processing for Plot
 city_mon_summary <- 
@@ -405,7 +405,7 @@ grid.draw(p1)
 ```
 
 ### When Do We See Most Rat Complaints?
-Many homeowners seem to have the misconception that rats will only invade their houses in winter since it is when temperatures at home differ significantly from the outside. However, in Chicago, we can see from the heatmap that rat complaints are most frequent in the summer, indicating that rat activities are potentially most rampant at that time. Summer is when temperatures are most moderate for rodents to move around and for smell of food to spread. The high level of human activities results in greater amount of trash that appeals to rats.
+Many homeowners seem to have the misconception that rats will only invade their houses in the winter since it is when temperatures at home differ significantly from the outside. However, in Chicago, we can see from the heatmap that rat complaints were most frequent in the summer, indicating that rats were potentially most rampant at that time (or at least more likely to be seen). Summer is when temperatures are most moderate for rodents to move around and for smell of food to spread. The higher level of human activities may result in greater amount of trash that appeals to rats.
 ```{r error=FALSE, fig.height=7.5, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 chicago_rodents_year <-
   chicago_rodents %>%
@@ -472,7 +472,7 @@ chicago_rodents_year_mon %>%
 ```
 
 ### Distribution of Sanitation Code Violations and Rat Complaints
-Although rat complaint distribution is not equivalent of the actual rat distribution, Chicago Lincoln Park Zoo has recently conducted <a href="https://www.frontiersin.org/articles/10.3389/fevo.2018.00189/full" target="_blank" class="research_link">research</a> indicating that it can be highly reflective of rodent infestation situation. The research also shows that the abundance of rats is potentially related to the abundance of garbage and other types of sanitation problems. That begs the question where rats and garbage are complained frequently and how much they overlap in different areas of Chicago. As is shown in the map below, we can see that sanitation code violations and rat complaints are connected.
+Although rat complaint distribution is not equivalent of the actual rat distribution, Chicago Lincoln Park Zoo has recently conducted <a href="https://www.frontiersin.org/articles/10.3389/fevo.2018.00189/full" target="_blank" class="research_link">research</a> indicating that it can be highly reflective of rodent infestation situation. The research also shows that the abundance of rats is potentially related to the abundance of garbage and other types of sanitation problems. That begs the question where rats and garbage were complained frequently and how much they overlapped in different areas of Chicago. As is shown in the map below, we can see that sanitation code violations and rat complaints might have some geographical relationship.
 ```{r error=FALSE, fig.height=9.95, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Data Processing for Plot 
 GOOGLE_TOKEN = read_delim(here("data", "GoogleAuth.txt"),
@@ -554,7 +554,7 @@ ggmap(chicago) +
 ```
 
 ### Surrounding Premises Where Rat Complaints Are Filed
-From the map above, we can see that rat complaints are generally distributed near sanitation code violations. If we take a further look at the premises where rat complaints are filed, we can see that most complaints are from premises associated with unhandled garbage from 2014 to 2018. Indeed, acting as potential food source, garbage is most appealing to rodents. It is important for the city government to make sure all properties empty garbage at a timely manner.
+From the map above, we can see that rat complaints were generally distributed near sanitation code violations. If we take a further look at the premises where rat complaints were filed, we can see that most complaints were from premises associated with unhandled garbage from 2014 to 2018. Indeed, acting as potential food sources, garbage is most appealing to rodents. It is important for the city government to make sure all properties empty garbage with a timely manner.
 ```{r error=FALSE, fig.height=10, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 premise_indicators1 <- 
   chicago_rodents %>%
@@ -719,7 +719,7 @@ chicago_rat_property %>%
 ```
 
 ### How Has Response Time Changed Over Years?
-The city has become increasingly responsive to rat complaints. In 2016, the mayor's absolute goal for city workers was to respond to all relevant complaints within 5 days, and now it seems that this goal is largely achieved. The bar chart below shows how days to resolve complaints have been decreasing throughout different months of years. Starting from 2016, response time has dropped drastically and the number of total rat complaints has also started to go down.
+The city has become increasingly responsive to rat complaints. In 2016, the mayor's absolute goal for city workers was to respond to all relevant complaints within 5 days, and now it seems that this goal is largely achieved. The bar chart below shows how days to resolve complaints have been decreasing throughout different months of years. Starting from 2016, response time has dropped drastically, but the number of total rat complaints seems unchanged.
 ```{r error=FALSE, fig.height=9, fig.width=11, message=FALSE, warning=FALSE, fig.showtext=TRUE}
 # Plot 
 chicago_rodents %>%
